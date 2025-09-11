@@ -1,0 +1,126 @@
+graph TD
+    A[Sistema CITO Iniciado] --> B[Monitoramento Diário STF]
+    
+    B --> C{Novas Publicações Detectadas?}
+    C -->|Não| D[Aguardar Próximo Ciclo]
+    C -->|Sim| E[Coletar Metadados Básicos]
+    
+    E --> F[Download Inteiro Teor]
+    F --> G[Identificar Arquivos Anexos]
+    
+    G --> H{Tipo de Documento}
+    H -->|PDF| I[Extração Texto PDF]
+    H -->|Imagem| J[Processamento OCR]
+    H -->|HTML| K[Parser HTML]
+    
+    I --> L[Normalização de Texto]
+    J --> L
+    K --> L
+    
+    L --> M[Estruturação Metadados]
+    M --> N[Número do Processo]
+    M --> O[Classificação da Ação]
+    M --> P[Identificação Relator]
+    M --> Q[Datas Relevantes]
+    M --> R[Partes Envolvidas]
+    
+    N --> S[Processamento NLP]
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    
+    S --> T[Identificação de Citações]
+    T --> U{Tipo de Citação}
+    
+    U -->|Autor| V[Extração Nome Autor]
+    U -->|Obra| W[Extração Título Obra]
+    U -->|Artigo| X[Extração Dados Artigo]
+    U -->|Jurisprudência| Y[Extração Precedentes]
+    
+    V --> Z[Normalização Dados]
+    W --> Z
+    X --> Z
+    Y --> Z
+    
+    Z --> AA[Classificação Contexto]
+    AA --> BB{Local da Citação}
+    BB -->|Corpo do Texto| CC[Tag: Citação Direta]
+    BB -->|Bibliografia| DD[Tag: Referência]
+    BB -->|Nota de Rodapé| EE[Tag: Citação Indireta]
+    
+    CC --> FF[Validação e Limpeza]
+    DD --> FF
+    EE --> FF
+    
+    FF --> GG[Persistência Banco de Dados]
+    GG --> HH[Tabela: Decisões]
+    GG --> II[Tabela: Citações]
+    GG --> JJ[Tabela: Autores]
+    GG --> KK[Tabela: Obras]
+    GG --> LL[Tabela: Documentos]
+    
+    HH --> MM[Indexação Full-Text]
+    II --> MM
+    JJ --> MM
+    KK --> MM
+    LL --> MM
+    
+    MM --> NN[Sistema de Consultas]
+    NN --> OO[Interface de Busca]
+    NN --> PP[Filtros Avançados]
+    NN --> QQ[Dashboard Analytics]
+    
+    OO --> RR{Tipo de Consulta}
+    RR -->|Busca Textual| SS[Elasticsearch Query]
+    RR -->|Filtro Autor| TT[Query Database Autores]
+    RR -->|Filtro Período| UU[Query Database Temporal]
+    RR -->|Filtro Classe| VV[Query Database Classes]
+    
+    SS --> WW[Resultados Formatados]
+    TT --> WW
+    UU --> WW
+    VV --> WW
+    
+    QQ --> XX[Geração de Dashboards]
+    XX --> YY[Ranking Autores Mais Citados]
+    XX --> ZZ[Evolução Temporal Citações]
+    XX --> AAA[Distribuição por Relator]
+    XX --> BBB[Correlação Ação x Doutrina]
+    
+    YY --> CCC[Alertas e Notificações]
+    ZZ --> CCC
+    AAA --> CCC
+    BBB --> CCC
+    
+    CCC --> DDD{Critérios de Alerta}
+    DDD -->|Nova Citação Autor| EEE[Email/Push Notification]
+    DDD -->|Nova Decisão Tema| FFF[SMS/Webhook]
+    DDD -->|Trending Author| GGG[Relatório Semanal]
+    
+    EEE --> HHH[API REST Endpoints]
+    FFF --> HHH
+    GGG --> HHH
+    
+    HHH --> III[Integrações Externas]
+    III --> JJJ[Sistemas Jurídicos]
+    III --> KKK[Aplicativos Mobile]
+    III --> LLL[Exportação Dados]
+    
+    LLL --> MMM{Formato Exportação}
+    MMM -->|CSV| NNN[Export Planilhas]
+    MMM -->|JSON| OOO[Export API Data]
+    MMM -->|PDF| PPP[Relatórios Executivos]
+    
+    D --> B
+    WW --> QQQ[Feedback Loop]
+    QQQ --> RRR[Machine Learning Training]
+    RRR --> SSS[Melhoria Accuracy NLP]
+    SSS --> T
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style GG fill:#e8f5e8
+    style MM fill:#fff3e0
+    style CCC fill:#ffebee
+    style HHH fill:#f1f8e9
