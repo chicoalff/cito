@@ -2,7 +2,7 @@
 
 O **CITO** é uma solução integrada para monitoramento, processamento e análise de jurisprudências do Supremo Tribunal Federal (STF), com foco especial em decisões que consolidam entendimentos relevantes. O sistema automatiza a coleta, estruturação e análise de decisões, extraindo metadados jurídicos e citações doutrinárias, e oferece dashboards e filtros avançados para pesquisa e inteligência jurídica.
 
-![Visão Geral do Projeto CITO](cito-visao-discovery-full.png)
+![Visão Geral do Projeto CITO](./discovery/cito-visao-discovery-full.png)
 
 ## Funcionalidades Principais
 
