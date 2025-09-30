@@ -52,4 +52,36 @@ O **CITO** é uma solução integrada para monitoramento, processamento e análi
 
 ---
 
-© 2024 Projeto CITO
+#  Estimativa de Esforço – MVP CITO (Piloto)
+
+## Estimativa Detalhada
+
+| Bloco                        | Atividade                                                      | Horas |
+| ---------------------------- | -------------------------------------------------------------- | ----- |
+| **Backend / Infraestrutura** | Configuração ambiente (N8N, Docker, FastAPI, PostgreSQL, MongoDB) | 16h   |
+|                              | Integração n8n → backend (coleta → API/storage) e API básica de consulta (processo, classe, relator, datas) | 12h   |
+| **Scraping e Processamento** | n8n Workflow para ingestão contínua do STF                     | 16h   |
+|                              | Scraping retroativo (últimos 6 meses)                          | 8h    |
+|                              | OCR (Tesseract) + Conversão texto (Docling/PDFPlumber)         | 6h    |
+| **Extração de Metadados**    | Parser de decisões (processo, classe, relator, órgão, datas)   | 16h   |
+|                              | Armazenamento no banco                                         | 12h   |
+| **Citações Doutrinárias**    | Pipeline inicial Regex + heurísticas                           | 6h    |
+|                              | Estrutura mínima de rastreabilidade (autor, obra, ano, página) | 10h   |
+|                              | Persistência no banco (AUTHOR/WORK/CITATION)                   | 6h    |
+| **Frontend (MVP)**           | Login básico                                                   | 4h    |
+|                              | Tela de pesquisa                                               | 8h    |
+|                              | Visualização do inteiro teor + download PDF                    | 6h    |
+|                              | Tela de citações doutrinárias                                  | 6h    |
+|                              | Dashboard piloto (indicadores + exportação CSV/PDF)            | 8h    |
+| **Dashboard / Relatórios**   | Relatório básico                                               | 12h   |
+
+---
+
+## Total de Esforço Estimado
+**152 horas** de desenvolvimento.
+
+## Observações
+- Estimativas focadas no escopo do MVP para prova de conceito.  
+- Horas não incluem atividades de gestão de projeto, QA detalhado ou suporte pós-MVP.  
+- O escopo de scraping retroativo está limitado a **6 meses de decisões do STF**.  
+- O frontend será básico, utilizando **MUI sem personalizações**.
