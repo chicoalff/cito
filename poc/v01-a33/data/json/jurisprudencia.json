@@ -1,0 +1,1602 @@
+[
+    {
+        "id_unico": 1,
+        "id_decisao_stf": "sjur467078",
+        "decisao": "ADI 2142",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur467078/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "27/06/2022",
+        "publicacao": "04/07/2022"
+    },
+    {
+        "id_unico": 2,
+        "id_decisao_stf": "sjur437503",
+        "decisao": "ADI 6288",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur437503/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "23/11/2020",
+        "publicacao": "03/12/2020"
+    },
+    {
+        "id_unico": 3,
+        "id_decisao_stf": "sjur522942",
+        "decisao": "ADI 7611 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur522942/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. FLÁVIO DINO",
+        "julgamento": "27/11/2024",
+        "publicacao": "21/02/2025"
+    },
+    {
+        "id_unico": 4,
+        "id_decisao_stf": "sjur476197",
+        "decisao": "ADI 4757",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur476197/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "13/12/2022",
+        "publicacao": "17/03/2023"
+    },
+    {
+        "id_unico": 5,
+        "id_decisao_stf": "sjur476200",
+        "decisao": "ADI 7200",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur476200/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "22/02/2023",
+        "publicacao": "17/03/2023"
+    },
+    {
+        "id_unico": 6,
+        "id_decisao_stf": "sjur441980",
+        "decisao": "ADI 5489",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur441980/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "24/02/2021",
+        "publicacao": "12/03/2021"
+    },
+    {
+        "id_unico": 7,
+        "id_decisao_stf": "sjur441979",
+        "decisao": "ADI 5374",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur441979/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "24/02/2021",
+        "publicacao": "12/03/2021"
+    },
+    {
+        "id_unico": 8,
+        "id_decisao_stf": "sjur480887",
+        "decisao": "ADI 7008",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur480887/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "22/05/2023",
+        "publicacao": "06/06/2023"
+    },
+    {
+        "id_unico": 9,
+        "id_decisao_stf": "sjur530888",
+        "decisao": "ADI 6618",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur530888/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CRISTIANO ZANIN",
+        "julgamento": "07/04/2025",
+        "publicacao": "09/05/2025"
+    },
+    {
+        "id_unico": 10,
+        "id_decisao_stf": "sjur467360",
+        "decisao": "ADI 6808",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur467360/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "28/04/2022",
+        "publicacao": "14/07/2022"
+    },
+    {
+        "id_unico": 11,
+        "id_decisao_stf": "sjur527800",
+        "decisao": "ADI 7007",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur527800/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CRISTIANO ZANIN",
+        "julgamento": "31/03/2025",
+        "publicacao": "04/04/2025"
+    },
+    {
+        "id_unico": 12,
+        "id_decisao_stf": "sjur472857",
+        "decisao": "ADI 4529",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur472857/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "22/11/2022",
+        "publicacao": "01/12/2022"
+    },
+    {
+        "id_unico": 13,
+        "id_decisao_stf": "sjur495781",
+        "decisao": "ADI 5014",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur495781/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "13/11/2023",
+        "publicacao": "20/02/2024"
+    },
+    {
+        "id_unico": 14,
+        "id_decisao_stf": "sjur458255",
+        "decisao": "ADI 5676",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur458255/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. RICARDO LEWANDOWSKI",
+        "julgamento": "18/12/2021",
+        "publicacao": "25/01/2022"
+    },
+    {
+        "id_unico": 15,
+        "id_decisao_stf": "sjur435050",
+        "decisao": "ADI 6350",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur435050/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "13/10/2020",
+        "publicacao": "29/10/2020"
+    },
+    {
+        "id_unico": 16,
+        "id_decisao_stf": "sjur445767",
+        "decisao": "ADI 6650",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur445767/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "27/04/2021",
+        "publicacao": "05/05/2021"
+    },
+    {
+        "id_unico": 17,
+        "id_decisao_stf": "sjur460105",
+        "decisao": "ADI 3378 ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur460105/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "21/02/2022",
+        "publicacao": "07/03/2022"
+    },
+    {
+        "id_unico": 18,
+        "id_decisao_stf": "sjur506055",
+        "decisao": "ADPF 760",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur506055/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "14/03/2024",
+        "publicacao": "26/06/2024"
+    },
+    {
+        "id_unico": 19,
+        "id_decisao_stf": "sjur478967",
+        "decisao": "ADI 7273 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur478967/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "03/05/2023",
+        "publicacao": "10/05/2023"
+    },
+    {
+        "id_unico": 20,
+        "id_decisao_stf": "sjur428092",
+        "decisao": "ADI 5374 MC-AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur428092/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "22/06/2020",
+        "publicacao": "08/07/2020"
+    },
+    {
+        "id_unico": 21,
+        "id_decisao_stf": "sjur468755",
+        "decisao": "ADPF 651",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur468755/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "28/04/2022",
+        "publicacao": "29/08/2022"
+    },
+    {
+        "id_unico": 22,
+        "id_decisao_stf": "sjur485048",
+        "decisao": "ADPF 887",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur485048/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. NUNES MARQUES",
+        "julgamento": "03/07/2023",
+        "publicacao": "21/08/2023"
+    },
+    {
+        "id_unico": 23,
+        "id_decisao_stf": "sjur420304",
+        "decisao": "ADI 5592",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur420304/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "11/09/2019",
+        "publicacao": "10/03/2020"
+    },
+    {
+        "id_unico": 24,
+        "id_decisao_stf": "sjur483570",
+        "decisao": "ADPF 623",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur483570/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "22/05/2023",
+        "publicacao": "18/07/2023"
+    },
+    {
+        "id_unico": 25,
+        "id_decisao_stf": "sjur520198",
+        "decisao": "ADI 7621",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur520198/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. NUNES MARQUES",
+        "julgamento": "09/12/2024",
+        "publicacao": "19/12/2024"
+    },
+    {
+        "id_unico": 26,
+        "id_decisao_stf": "sjur504935",
+        "decisao": "ADPF 743",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur504935/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ANDRÉ MENDONÇA",
+        "julgamento": "20/03/2024",
+        "publicacao": "11/06/2024"
+    },
+    {
+        "id_unico": 27,
+        "id_decisao_stf": "sjur408490",
+        "decisao": "ADC 42",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur408490/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "28/02/2018",
+        "publicacao": "13/08/2019"
+    },
+    {
+        "id_unico": 28,
+        "id_decisao_stf": "sjur525658",
+        "decisao": "ADPF 1201 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur525658/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. FLÁVIO DINO",
+        "julgamento": "24/02/2025",
+        "publicacao": "17/03/2025"
+    },
+    {
+        "id_unico": 29,
+        "id_decisao_stf": "sjur527180",
+        "decisao": "ADI 7273",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur527180/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "24/03/2025",
+        "publicacao": "28/03/2025"
+    },
+    {
+        "id_unico": 30,
+        "id_decisao_stf": "sjur467643",
+        "decisao": "ADPF 748",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur467643/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "23/05/2022",
+        "publicacao": "05/08/2022"
+    },
+    {
+        "id_unico": 31,
+        "id_decisao_stf": "sjur530278",
+        "decisao": "ADI 7611 MC-Ref-ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur530278/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. FLÁVIO DINO",
+        "julgamento": "25/04/2025",
+        "publicacao": "05/05/2025"
+    },
+    {
+        "id_unico": 32,
+        "id_decisao_stf": "sjur490842",
+        "decisao": "ADI 4031",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur490842/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "02/10/2023",
+        "publicacao": "09/11/2023"
+    },
+    {
+        "id_unico": 33,
+        "id_decisao_stf": "sjur514542",
+        "decisao": "ADI 5014 ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur514542/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "30/09/2024",
+        "publicacao": "11/10/2024"
+    },
+    {
+        "id_unico": 34,
+        "id_decisao_stf": "sjur488919",
+        "decisao": "ADI 3526",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur488919/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. NUNES MARQUES",
+        "julgamento": "22/08/2023",
+        "publicacao": "09/10/2023"
+    },
+    {
+        "id_unico": 35,
+        "id_decisao_stf": "sjur522276",
+        "decisao": "ADC 42 ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur522276/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "24/10/2024",
+        "publicacao": "13/02/2025"
+    },
+    {
+        "id_unico": 36,
+        "id_decisao_stf": "sjur491535",
+        "decisao": "ADI 7413",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur491535/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "24/10/2023",
+        "publicacao": "22/11/2024"
+    },
+    {
+        "id_unico": 37,
+        "id_decisao_stf": "sjur456546",
+        "decisao": "ADPF 825",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur456546/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "03/08/2021",
+        "publicacao": "26/11/2021"
+    },
+    {
+        "id_unico": 38,
+        "id_decisao_stf": "sjur458045",
+        "decisao": "ADPF 749",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur458045/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "14/12/2021",
+        "publicacao": "10/01/2022"
+    },
+    {
+        "id_unico": 39,
+        "id_decisao_stf": "sjur473636",
+        "decisao": "ADI 2083",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur473636/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "28/11/2022",
+        "publicacao": "19/12/2022"
+    },
+    {
+        "id_unico": 40,
+        "id_decisao_stf": "sjur460745",
+        "decisao": "ADPF 890",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur460745/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "29/11/2021",
+        "publicacao": "15/03/2022"
+    },
+    {
+        "id_unico": 41,
+        "id_decisao_stf": "sjur433764",
+        "decisao": "ADI 5480",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur433764/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "20/04/2020",
+        "publicacao": "04/09/2020"
+    },
+    {
+        "id_unico": 42,
+        "id_decisao_stf": "sjur521577",
+        "decisao": "ADPF 743 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur521577/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. FLÁVIO DINO",
+        "julgamento": "12/11/2024",
+        "publicacao": "06/02/2025"
+    },
+    {
+        "id_unico": 43,
+        "id_decisao_stf": "sjur453074",
+        "decisao": "ADI 6672",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur453074/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "15/09/2021",
+        "publicacao": "22/09/2021"
+    },
+    {
+        "id_unico": 44,
+        "id_decisao_stf": "sjur542286",
+        "decisao": "ADI 7840 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur542286/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. FLÁVIO DINO",
+        "julgamento": "25/08/2025",
+        "publicacao": "18/09/2025"
+    },
+    {
+        "id_unico": 45,
+        "id_decisao_stf": "sjur397942",
+        "decisao": "ADI 5312",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur397942/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "25/10/2018",
+        "publicacao": "11/02/2019"
+    },
+    {
+        "id_unico": 46,
+        "id_decisao_stf": "sjur433144",
+        "decisao": "ADI 5547",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur433144/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "22/09/2020",
+        "publicacao": "06/10/2020"
+    },
+    {
+        "id_unico": 47,
+        "id_decisao_stf": "sjur425818",
+        "decisao": "ADI 5475",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur425818/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "20/04/2020",
+        "publicacao": "03/06/2020"
+    },
+    {
+        "id_unico": 48,
+        "id_decisao_stf": "sjur458229",
+        "decisao": "ADPF 863 TPI-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur458229/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "29/11/2021",
+        "publicacao": "21/01/2022"
+    },
+    {
+        "id_unico": 49,
+        "id_decisao_stf": "sjur414015",
+        "decisao": "ADI 4615",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur414015/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "20/09/2019",
+        "publicacao": "28/10/2019"
+    },
+    {
+        "id_unico": 50,
+        "id_decisao_stf": "sjur500086",
+        "decisao": "ADI 7509",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur500086/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "04/04/2024",
+        "publicacao": "10/04/2024"
+    },
+    {
+        "id_unico": 51,
+        "id_decisao_stf": "sjur395007",
+        "decisao": "ADI 5077",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur395007/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "25/10/2018",
+        "publicacao": "23/11/2018"
+    },
+    {
+        "id_unico": 52,
+        "id_decisao_stf": "sjur489876",
+        "decisao": "ADI 7321 ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur489876/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "28/08/2023",
+        "publicacao": "20/10/2023"
+    },
+    {
+        "id_unico": 53,
+        "id_decisao_stf": "sjur466433",
+        "decisao": "ADPF 863",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur466433/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "16/05/2022",
+        "publicacao": "24/06/2022"
+    },
+    {
+        "id_unico": 54,
+        "id_decisao_stf": "sjur224374",
+        "decisao": "ADI 4218 AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur224374/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "13/12/2012",
+        "publicacao": "19/02/2013"
+    },
+    {
+        "id_unico": 55,
+        "id_decisao_stf": "sjur392844",
+        "decisao": "ADI 2030",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur392844/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "09/08/2017",
+        "publicacao": "17/10/2018"
+    },
+    {
+        "id_unico": 56,
+        "id_decisao_stf": "sjur429107",
+        "decisao": "ADI 5447",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur429107/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "22/05/2020",
+        "publicacao": "07/08/2020"
+    },
+    {
+        "id_unico": 57,
+        "id_decisao_stf": "sjur2338",
+        "decisao": "ADI 3252 MC",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur2338/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "06/04/2005",
+        "publicacao": "24/10/2008"
+    },
+    {
+        "id_unico": 58,
+        "id_decisao_stf": "sjur432457",
+        "decisao": "ADI 4069",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur432457/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "08/09/2020",
+        "publicacao": "24/09/2020"
+    },
+    {
+        "id_unico": 59,
+        "id_decisao_stf": "sjur482741",
+        "decisao": "ADI 6446",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur482741/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "13/06/2023",
+        "publicacao": "27/06/2023"
+    },
+    {
+        "id_unico": 60,
+        "id_decisao_stf": "sjur459498",
+        "decisao": "ADI 7007 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur459498/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. RICARDO LEWANDOWSKI",
+        "julgamento": "04/11/2021",
+        "publicacao": "23/02/2022"
+    },
+    {
+        "id_unico": 61,
+        "id_decisao_stf": "sjur416112",
+        "decisao": "ADI 3646",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur416112/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "20/09/2019",
+        "publicacao": "02/12/2019"
+    },
+    {
+        "id_unico": 62,
+        "id_decisao_stf": "sjur484350",
+        "decisao": "ADI 7321",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur484350/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "05/06/2023",
+        "publicacao": "04/08/2023"
+    },
+    {
+        "id_unico": 63,
+        "id_decisao_stf": "sjur438122",
+        "decisao": "ADPF 748 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur438122/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "30/11/2020",
+        "publicacao": "10/12/2020"
+    },
+    {
+        "id_unico": 64,
+        "id_decisao_stf": "sjur90231",
+        "decisao": "ADI 3378",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur90231/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CARLOS BRITTO",
+        "julgamento": "09/04/2008",
+        "publicacao": "20/06/2008"
+    },
+    {
+        "id_unico": 65,
+        "id_decisao_stf": "sjur11940",
+        "decisao": "ADI 1505",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur11940/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EROS GRAU",
+        "julgamento": "24/11/2004",
+        "publicacao": "04/03/2005"
+    },
+    {
+        "id_unico": 66,
+        "id_decisao_stf": "sjur470897",
+        "decisao": "ADI 4786",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur470897/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. NUNES MARQUES",
+        "julgamento": "01/08/2022",
+        "publicacao": "14/10/2022"
+    },
+    {
+        "id_unico": 67,
+        "id_decisao_stf": "sjur425830",
+        "decisao": "ADPF 423",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur425830/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "15/05/2020",
+        "publicacao": "03/06/2020"
+    },
+    {
+        "id_unico": 68,
+        "id_decisao_stf": "sjur464781",
+        "decisao": "ADI 3970",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur464781/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "16/05/2022",
+        "publicacao": "24/05/2022"
+    },
+    {
+        "id_unico": 69,
+        "id_decisao_stf": "sjur474285",
+        "decisao": "ADI 6957",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur474285/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "17/12/2022",
+        "publicacao": "06/02/2023"
+    },
+    {
+        "id_unico": 70,
+        "id_decisao_stf": "sjur504356",
+        "decisao": "ADI 7498",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur504356/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "20/05/2024",
+        "publicacao": "05/06/2024"
+    },
+    {
+        "id_unico": 71,
+        "id_decisao_stf": "sjur542887",
+        "decisao": "ADI 7820",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur542887/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "22/09/2025",
+        "publicacao": "26/09/2025"
+    },
+    {
+        "id_unico": 72,
+        "id_decisao_stf": "sjur519425",
+        "decisao": "ADO 63",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur519425/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ANDRÉ MENDONÇA",
+        "julgamento": "06/06/2024",
+        "publicacao": "10/12/2024"
+    },
+    {
+        "id_unico": 73,
+        "id_decisao_stf": "sjur484700",
+        "decisao": "ADO 59",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur484700/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "03/11/2022",
+        "publicacao": "16/08/2023"
+    },
+    {
+        "id_unico": 74,
+        "id_decisao_stf": "sjur514538",
+        "decisao": "ADI 7056",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur514538/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "30/09/2024",
+        "publicacao": "11/10/2024"
+    },
+    {
+        "id_unico": 75,
+        "id_decisao_stf": "sjur423026",
+        "decisao": "ADI 5996",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur423026/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "15/04/2020",
+        "publicacao": "30/04/2020"
+    },
+    {
+        "id_unico": 76,
+        "id_decisao_stf": "sjur200016",
+        "decisao": "ADI 1856",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur200016/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CELSO DE MELLO",
+        "julgamento": "26/05/2011",
+        "publicacao": "14/10/2011"
+    },
+    {
+        "id_unico": 77,
+        "id_decisao_stf": "sjur18646",
+        "decisao": "ADI 1086",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur18646/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ILMAR GALVÃO",
+        "julgamento": "07/06/2001",
+        "publicacao": "10/08/2001"
+    },
+    {
+        "id_unico": 78,
+        "id_decisao_stf": "sjur506764",
+        "decisao": "ADPF 935 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur506764/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. RICARDO LEWANDOWSKI",
+        "julgamento": "29/04/2024",
+        "publicacao": "02/07/2024"
+    },
+    {
+        "id_unico": 79,
+        "id_decisao_stf": "sjur530184",
+        "decisao": "ADI 6955",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur530184/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "25/04/2025",
+        "publicacao": "05/05/2025"
+    },
+    {
+        "id_unico": 80,
+        "id_decisao_stf": "sjur397323",
+        "decisao": "ADI 4269",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur397323/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "18/10/2017",
+        "publicacao": "01/02/2019"
+    },
+    {
+        "id_unico": 81,
+        "id_decisao_stf": "sjur471264",
+        "decisao": "ADPF 651 ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur471264/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "18/10/2022",
+        "publicacao": "25/10/2022"
+    },
+    {
+        "id_unico": 82,
+        "id_decisao_stf": "sjur470898",
+        "decisao": "ADI 4787",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur470898/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "01/08/2022",
+        "publicacao": "14/10/2022"
+    },
+    {
+        "id_unico": 83,
+        "id_decisao_stf": "sjur458254",
+        "decisao": "ADI 5675",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur458254/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. RICARDO LEWANDOWSKI",
+        "julgamento": "18/12/2021",
+        "publicacao": "25/01/2022"
+    },
+    {
+        "id_unico": 84,
+        "id_decisao_stf": "sjur530899",
+        "decisao": "ADPF 218",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur530899/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "07/05/2025",
+        "publicacao": "12/05/2025"
+    },
+    {
+        "id_unico": 85,
+        "id_decisao_stf": "sjur423230",
+        "decisao": "ADI 6211",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur423230/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "04/12/2019",
+        "publicacao": "05/05/2020"
+    },
+    {
+        "id_unico": 86,
+        "id_decisao_stf": "sjur392021",
+        "decisao": "ADI 4988",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur392021/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "19/09/2018",
+        "publicacao": "05/10/2018"
+    },
+    {
+        "id_unico": 87,
+        "id_decisao_stf": "sjur478801",
+        "decisao": "ADPF 708 ED-segundos",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur478801/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "03/05/2023",
+        "publicacao": "10/05/2023"
+    },
+    {
+        "id_unico": 88,
+        "id_decisao_stf": "sjur469803",
+        "decisao": "ADI 6148",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur469803/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "05/05/2022",
+        "publicacao": "15/09/2022"
+    },
+    {
+        "id_unico": 89,
+        "id_decisao_stf": "sjur97047",
+        "decisao": "ADI 2714",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur97047/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MAURÍCIO CORRÊA",
+        "julgamento": "13/03/2003",
+        "publicacao": "27/02/2004"
+    },
+    {
+        "id_unico": 90,
+        "id_decisao_stf": "sjur478192",
+        "decisao": "ADI 6597",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur478192/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "18/04/2023",
+        "publicacao": "02/05/2023"
+    },
+    {
+        "id_unico": 91,
+        "id_decisao_stf": "sjur466054",
+        "decisao": "ADPF 941 AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur466054/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "13/06/2022",
+        "publicacao": "17/06/2022"
+    },
+    {
+        "id_unico": 92,
+        "id_decisao_stf": "sjur438765",
+        "decisao": "ADI 3161",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur438765/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "13/10/2020",
+        "publicacao": "17/12/2020"
+    },
+    {
+        "id_unico": 93,
+        "id_decisao_stf": "sjur211782",
+        "decisao": "ADI 4677 AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur211782/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "20/06/2012",
+        "publicacao": "01/08/2012"
+    },
+    {
+        "id_unico": 94,
+        "id_decisao_stf": "sjur22142",
+        "decisao": "ADI 2007 MC",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur22142/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. SEPÚLVEDA PERTENCE",
+        "julgamento": "12/08/1999",
+        "publicacao": "24/09/1999"
+    },
+    {
+        "id_unico": 95,
+        "id_decisao_stf": "sjur481679",
+        "decisao": "ADI 6137",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur481679/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "29/05/2023",
+        "publicacao": "14/06/2023"
+    },
+    {
+        "id_unico": 96,
+        "id_decisao_stf": "sjur470395",
+        "decisao": "ADPF 708",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur470395/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "04/07/2022",
+        "publicacao": "28/09/2022"
+    },
+    {
+        "id_unico": 97,
+        "id_decisao_stf": "sjur453072",
+        "decisao": "ADI 4970",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur453072/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "15/09/2021",
+        "publicacao": "22/09/2021"
+    },
+    {
+        "id_unico": 98,
+        "id_decisao_stf": "sjur116895",
+        "decisao": "ADI 1086 MC",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur116895/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ILMAR GALVÃO",
+        "julgamento": "01/08/1994",
+        "publicacao": "16/09/1994"
+    },
+    {
+        "id_unico": 99,
+        "id_decisao_stf": "sjur459424",
+        "decisao": "ADI 4397",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur459424/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "11/11/2021",
+        "publicacao": "22/02/2022"
+    },
+    {
+        "id_unico": 100,
+        "id_decisao_stf": "sjur514694",
+        "decisao": "ADI 7247",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur514694/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "30/09/2024",
+        "publicacao": "14/10/2024"
+    },
+    {
+        "id_unico": 1,
+        "id_decisao_stf": "sjur229171",
+        "decisao": "ADPF 54",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur229171/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "12/04/2012",
+        "publicacao": "30/04/2013"
+    },
+    {
+        "id_unico": 2,
+        "id_decisao_stf": "sjur5762",
+        "decisao": "ADPF 54 QO",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur5762/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "27/04/2005",
+        "publicacao": "31/08/2007"
+    },
+    {
+        "id_unico": 3,
+        "id_decisao_stf": "sjur435625",
+        "decisao": "ADI 5581",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur435625/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "04/05/2020",
+        "publicacao": "05/11/2020"
+    },
+    {
+        "id_unico": 4,
+        "id_decisao_stf": "sjur391945",
+        "decisao": "ADI 5617",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur391945/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "15/03/2018",
+        "publicacao": "03/10/2018"
+    },
+    {
+        "id_unico": 5,
+        "id_decisao_stf": "sjur508961",
+        "decisao": "ADPF 442 ED-terceiros",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur508961/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. FLÁVIO DINO",
+        "julgamento": "12/08/2024",
+        "publicacao": "21/08/2024"
+    },
+    {
+        "id_unico": 6,
+        "id_decisao_stf": "sjur387047",
+        "decisao": "ADI 4439",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur387047/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "27/09/2017",
+        "publicacao": "21/06/2018"
+    },
+    {
+        "id_unico": 7,
+        "id_decisao_stf": "sjur178396",
+        "decisao": "ADI 3510",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur178396/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. AYRES BRITTO",
+        "julgamento": "29/05/2008",
+        "publicacao": "28/05/2010"
+    },
+    {
+        "id_unico": 8,
+        "id_decisao_stf": "sjur208485",
+        "decisao": "ADI 4274",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur208485/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. AYRES BRITTO",
+        "julgamento": "23/11/2011",
+        "publicacao": "02/05/2012"
+    },
+    {
+        "id_unico": 9,
+        "id_decisao_stf": "sjur377775",
+        "decisao": "ADPF 304",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur377775/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "08/11/2017",
+        "publicacao": "20/11/2017"
+    },
+    {
+        "id_unico": 10,
+        "id_decisao_stf": "sjur435634",
+        "decisao": "ADPF 501 AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur435634/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "16/09/2020",
+        "publicacao": "05/11/2020"
+    },
+    {
+        "id_unico": 11,
+        "id_decisao_stf": "sjur444980",
+        "decisao": "ADI 5258",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur444980/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "13/04/2021",
+        "publicacao": "27/04/2021"
+    },
+    {
+        "id_unico": 12,
+        "id_decisao_stf": "sjur420069",
+        "decisao": "ADPF 556",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur420069/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "14/02/2020",
+        "publicacao": "06/03/2020"
+    },
+    {
+        "id_unico": 13,
+        "id_decisao_stf": "sjur514847",
+        "decisao": "ADI 7474",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur514847/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "14/10/2024",
+        "publicacao": "16/10/2024"
+    },
+    {
+        "id_unico": 14,
+        "id_decisao_stf": "sjur406927",
+        "decisao": "ADPF 275",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur406927/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "17/10/2018",
+        "publicacao": "27/06/2019"
+    },
+    {
+        "id_unico": 15,
+        "id_decisao_stf": "sjur399205",
+        "decisao": "ADI 4275",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur399205/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "01/03/2018",
+        "publicacao": "07/03/2019"
+    },
+    {
+        "id_unico": 16,
+        "id_decisao_stf": "sjur481146",
+        "decisao": "ADI 6338",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur481146/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "03/04/2023",
+        "publicacao": "07/06/2023"
+    },
+    {
+        "id_unico": 17,
+        "id_decisao_stf": "sjur480047",
+        "decisao": "ADPF 822",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur480047/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "27/03/2023",
+        "publicacao": "30/05/2023"
+    },
+    {
+        "id_unico": 18,
+        "id_decisao_stf": "sjur315727",
+        "decisao": "ADI 5081",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur315727/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "27/05/2015",
+        "publicacao": "19/08/2015"
+    },
+    {
+        "id_unico": 19,
+        "id_decisao_stf": "sjur538275",
+        "decisao": "ADI 2135 ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur538275/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "12/08/2025",
+        "publicacao": "19/08/2025"
+    },
+    {
+        "id_unico": 20,
+        "id_decisao_stf": "sjur428764",
+        "decisao": "ADPF 167",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur428764/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "07/03/2018",
+        "publicacao": "14/10/2020"
+    },
+    {
+        "id_unico": 21,
+        "id_decisao_stf": "sjur421005",
+        "decisao": "ADPF 216",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur421005/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "14/03/2018",
+        "publicacao": "23/03/2020"
+    },
+    {
+        "id_unico": 22,
+        "id_decisao_stf": "sjur445269",
+        "decisao": "ADPF 742 MC",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur445269/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "24/02/2021",
+        "publicacao": "29/04/2021"
+    },
+    {
+        "id_unico": 23,
+        "id_decisao_stf": "sjur426824",
+        "decisao": "ADI 6327 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur426824/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "03/04/2020",
+        "publicacao": "19/06/2020"
+    },
+    {
+        "id_unico": 24,
+        "id_decisao_stf": "sjur352982",
+        "decisao": "ADPF 388",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur352982/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "09/03/2016",
+        "publicacao": "01/08/2016"
+    },
+    {
+        "id_unico": 25,
+        "id_decisao_stf": "sjur433180",
+        "decisao": "ADO 26",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur433180/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CELSO DE MELLO",
+        "julgamento": "13/06/2019",
+        "publicacao": "06/10/2020"
+    },
+    {
+        "id_unico": 26,
+        "id_decisao_stf": "sjur291879",
+        "decisao": "ADPF 77 MC",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur291879/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MENEZES DIREITO",
+        "julgamento": "19/11/2014",
+        "publicacao": "11/02/2015"
+    },
+    {
+        "id_unico": 27,
+        "id_decisao_stf": "sjur433524",
+        "decisao": "ADI 3396 AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur433524/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CELSO DE MELLO",
+        "julgamento": "06/08/2020",
+        "publicacao": "14/10/2020"
+    },
+    {
+        "id_unico": 28,
+        "id_decisao_stf": "sjur436120",
+        "decisao": "ADPF 484",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur436120/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "04/06/2020",
+        "publicacao": "10/11/2020"
+    },
+    {
+        "id_unico": 29,
+        "id_decisao_stf": "sjur436850",
+        "decisao": "ADI 6363 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur436850/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. RICARDO LEWANDOWSKI",
+        "julgamento": "17/04/2020",
+        "publicacao": "24/11/2020"
+    },
+    {
+        "id_unico": 30,
+        "id_decisao_stf": "sjur528272",
+        "decisao": "ADI 5728",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur528272/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "17/03/2025",
+        "publicacao": "09/04/2025"
+    },
+    {
+        "id_unico": 1,
+        "id_decisao_stf": "sjur229171",
+        "decisao": "ADPF 54",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur229171/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "12/04/2012",
+        "publicacao": "30/04/2013"
+    },
+    {
+        "id_unico": 2,
+        "id_decisao_stf": "sjur5762",
+        "decisao": "ADPF 54 QO",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur5762/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "27/04/2005",
+        "publicacao": "31/08/2007"
+    },
+    {
+        "id_unico": 3,
+        "id_decisao_stf": "sjur435625",
+        "decisao": "ADI 5581",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur435625/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "04/05/2020",
+        "publicacao": "05/11/2020"
+    },
+    {
+        "id_unico": 4,
+        "id_decisao_stf": "sjur391945",
+        "decisao": "ADI 5617",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur391945/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "15/03/2018",
+        "publicacao": "03/10/2018"
+    },
+    {
+        "id_unico": 5,
+        "id_decisao_stf": "sjur508961",
+        "decisao": "ADPF 442 ED-terceiros",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur508961/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. FLÁVIO DINO",
+        "julgamento": "12/08/2024",
+        "publicacao": "21/08/2024"
+    },
+    {
+        "id_unico": 6,
+        "id_decisao_stf": "sjur387047",
+        "decisao": "ADI 4439",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur387047/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "27/09/2017",
+        "publicacao": "21/06/2018"
+    },
+    {
+        "id_unico": 7,
+        "id_decisao_stf": "sjur178396",
+        "decisao": "ADI 3510",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur178396/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. AYRES BRITTO",
+        "julgamento": "29/05/2008",
+        "publicacao": "28/05/2010"
+    },
+    {
+        "id_unico": 8,
+        "id_decisao_stf": "sjur208485",
+        "decisao": "ADI 4274",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur208485/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. AYRES BRITTO",
+        "julgamento": "23/11/2011",
+        "publicacao": "02/05/2012"
+    },
+    {
+        "id_unico": 9,
+        "id_decisao_stf": "sjur377775",
+        "decisao": "ADPF 304",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur377775/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "08/11/2017",
+        "publicacao": "20/11/2017"
+    },
+    {
+        "id_unico": 10,
+        "id_decisao_stf": "sjur435634",
+        "decisao": "ADPF 501 AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur435634/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "16/09/2020",
+        "publicacao": "05/11/2020"
+    },
+    {
+        "id_unico": 11,
+        "id_decisao_stf": "sjur444980",
+        "decisao": "ADI 5258",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur444980/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "13/04/2021",
+        "publicacao": "27/04/2021"
+    },
+    {
+        "id_unico": 12,
+        "id_decisao_stf": "sjur420069",
+        "decisao": "ADPF 556",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur420069/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "14/02/2020",
+        "publicacao": "06/03/2020"
+    },
+    {
+        "id_unico": 13,
+        "id_decisao_stf": "sjur514847",
+        "decisao": "ADI 7474",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur514847/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "14/10/2024",
+        "publicacao": "16/10/2024"
+    },
+    {
+        "id_unico": 14,
+        "id_decisao_stf": "sjur406927",
+        "decisao": "ADPF 275",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur406927/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ALEXANDRE DE MORAES",
+        "julgamento": "17/10/2018",
+        "publicacao": "27/06/2019"
+    },
+    {
+        "id_unico": 15,
+        "id_decisao_stf": "sjur399205",
+        "decisao": "ADI 4275",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur399205/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "01/03/2018",
+        "publicacao": "07/03/2019"
+    },
+    {
+        "id_unico": 16,
+        "id_decisao_stf": "sjur481146",
+        "decisao": "ADI 6338",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur481146/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROSA WEBER",
+        "julgamento": "03/04/2023",
+        "publicacao": "07/06/2023"
+    },
+    {
+        "id_unico": 17,
+        "id_decisao_stf": "sjur480047",
+        "decisao": "ADPF 822",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur480047/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "27/03/2023",
+        "publicacao": "30/05/2023"
+    },
+    {
+        "id_unico": 18,
+        "id_decisao_stf": "sjur315727",
+        "decisao": "ADI 5081",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur315727/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. ROBERTO BARROSO",
+        "julgamento": "27/05/2015",
+        "publicacao": "19/08/2015"
+    },
+    {
+        "id_unico": 19,
+        "id_decisao_stf": "sjur538275",
+        "decisao": "ADI 2135 ED",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur538275/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "12/08/2025",
+        "publicacao": "19/08/2025"
+    },
+    {
+        "id_unico": 20,
+        "id_decisao_stf": "sjur428764",
+        "decisao": "ADPF 167",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur428764/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "07/03/2018",
+        "publicacao": "14/10/2020"
+    },
+    {
+        "id_unico": 21,
+        "id_decisao_stf": "sjur421005",
+        "decisao": "ADPF 216",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur421005/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CÁRMEN LÚCIA",
+        "julgamento": "14/03/2018",
+        "publicacao": "23/03/2020"
+    },
+    {
+        "id_unico": 22,
+        "id_decisao_stf": "sjur445269",
+        "decisao": "ADPF 742 MC",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur445269/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MARCO AURÉLIO",
+        "julgamento": "24/02/2021",
+        "publicacao": "29/04/2021"
+    },
+    {
+        "id_unico": 23,
+        "id_decisao_stf": "sjur426824",
+        "decisao": "ADI 6327 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur426824/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. EDSON FACHIN",
+        "julgamento": "03/04/2020",
+        "publicacao": "19/06/2020"
+    },
+    {
+        "id_unico": 24,
+        "id_decisao_stf": "sjur352982",
+        "decisao": "ADPF 388",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur352982/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. GILMAR MENDES",
+        "julgamento": "09/03/2016",
+        "publicacao": "01/08/2016"
+    },
+    {
+        "id_unico": 25,
+        "id_decisao_stf": "sjur433180",
+        "decisao": "ADO 26",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur433180/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CELSO DE MELLO",
+        "julgamento": "13/06/2019",
+        "publicacao": "06/10/2020"
+    },
+    {
+        "id_unico": 26,
+        "id_decisao_stf": "sjur291879",
+        "decisao": "ADPF 77 MC",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur291879/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. MENEZES DIREITO",
+        "julgamento": "19/11/2014",
+        "publicacao": "11/02/2015"
+    },
+    {
+        "id_unico": 27,
+        "id_decisao_stf": "sjur433524",
+        "decisao": "ADI 3396 AgR",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur433524/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. CELSO DE MELLO",
+        "julgamento": "06/08/2020",
+        "publicacao": "14/10/2020"
+    },
+    {
+        "id_unico": 28,
+        "id_decisao_stf": "sjur436120",
+        "decisao": "ADPF 484",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur436120/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. LUIZ FUX",
+        "julgamento": "04/06/2020",
+        "publicacao": "10/11/2020"
+    },
+    {
+        "id_unico": 29,
+        "id_decisao_stf": "sjur436850",
+        "decisao": "ADI 6363 MC-Ref",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur436850/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. RICARDO LEWANDOWSKI",
+        "julgamento": "17/04/2020",
+        "publicacao": "24/11/2020"
+    },
+    {
+        "id_unico": 30,
+        "id_decisao_stf": "sjur528272",
+        "decisao": "ADI 5728",
+        "url": "https://jurisprudencia.stf.jus.br/pages/search/sjur528272/false",
+        "orgao_colegiado": "Tribunal Pleno",
+        "relator": "Min. DIAS TOFFOLI",
+        "julgamento": "17/03/2025",
+        "publicacao": "09/04/2025"
+    }
+]
