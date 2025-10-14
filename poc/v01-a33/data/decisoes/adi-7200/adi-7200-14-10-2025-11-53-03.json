@@ -1,0 +1,43 @@
+{
+  "processo": {
+    "numero": "ADI 7200 / RR",
+    "tipo": "Ação Direta de Inconstitucionalidade"
+  },
+  "partes": {
+    "autor": "REDE SUSTENTABILIDADE",
+    "reu": [
+      "GOVERNADOR DO ESTADO DE RORAIMA",
+      "ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA"
+    ]
+  },
+  "relator": "Min. ROBERTO BARROSO",
+  "data_julgamento": "22/02/2023",
+  "decisao": {
+    "resultado": "procedente",
+    "tese_principal": "É inconstitucional lei estadual que proíbe os órgãos policiais e ambientais de destruir e inutilizar bens particulares apreendidos em operações, por violação da competência privativa da União para legislar sobre direito penal e processual penal, para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988) e por afronta ao direito ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988)",
+    "votos": {
+      "relator": "pela procedência do pedido",
+      "demais_ministros": "unanimidade"
+    }
+  },
+  "fundamentos": {
+    "principais_argumentos": [
+      "Usurpação de competência da União para legislar sobre direito penal e processual penal, bem como para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988)",
+      "Vulneração do direito fundamental ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988), ao permitir a prática de novos ilícitos ambientais e inviabilizar o exercício do poder de polícia ambiental"
+    ],
+    "base_legal": [
+      "art. 22, I, da CF/1988 (competência privativa da União para legislar sobre direito penal e processual penal)",
+      "art. 24, VI e § 1º, da CF/1988 (competência concorrente para normas gerais de proteção ao meio ambiente)",
+      "art. 225, caput, da CF/1988 (direito ao meio ambiente ecologicamente equilibrado)"
+    ]
+  },
+  "ementa": "DIREITO CONSTITUCIONAL. AÇÃO DIRETA DE INCONSTITUCIONALIDADE. LEI ESTADUAL QUE VEDA A DESTRUIÇÃO E INUTILIZAÇÃO DE BENS PARTICULARES APREENDIDOS EM OPERAÇÕES AMBIENTAIS. 1. Ação direta contra a Lei nº 1.701/2022, do Estado de Roraima, que proíbe os órgãos ambientais de fiscalização e a Polícia Militar de destruir e inutilizar bens particulares apreendidos nas operações e fiscalizações ambientais. 2. Ao proibir a destruição de instrumentos utilizados na prática de infrações ambientais, a lei questionada incorre em inconstitucionalidade formal. Usurpação de competência da União para legislar sobre direito penal e processual penal, bem como para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988). 3. De igual modo, a norma questionada vulnera o direito fundamental ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988). Isso porque a proibição de destruir instrumentos utilizados em infrações ambientais acaba permitindo a prática de novos ilícitos, inviabilizando a plenitude do exercício poder de polícia ambiental. 4. A manutenção dos efeitos da norma estadual pode acarretar prejuízo para a devida repressão à prática de ilícitos ambientais, com potenciais danos irreparáveis ao meio ambiente e às populações indígenas no Estado de Roraima. 5. Pedido julgado procedente para declarar a inconstitucionalidade da Lei nº 1.701, de 5.7.2022, do Estado de Roraima, com a seguinte tese de julgamento: “É inconstitucional lei estadual que proíbe os órgãos policiais e ambientais de destruir e inutilizar bens particulares apreendidos em operações, por violação da competência privativa da União para legislar sobre direito penal e processual penal, para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988) e por afronta ao direito ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988)”.",
+  "tema_repercussao": null,
+  "_metadados": {
+    "arquivo_origem": "adi-7200-14-10-2025-11-53-03.html",
+    "data_processamento": "2025-01-14",
+    "modelo_ia": "mistral-large-latest",
+    "tipo_analise": "juridica_strict",
+    "status_processamento": "sucesso"
+  }
+}
