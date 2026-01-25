@@ -32,6 +32,7 @@ import requests
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.errors import PyMongoError
+from pymongo import ReturnDocument
 
 
 # =========================
@@ -46,6 +47,8 @@ COLLECTION = "case_data"
 STATUS_INPUT = "extracted"
 STATUS_OK = "caseScraped"
 STATUS_ERROR = "caseScrapeError"
+STATUS_PROCESSING = "caseScraping"
+
 
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -73,24 +76,50 @@ def get_collection() -> Collection:
     return db[COLLECTION]
 
 
-def fetch_oldest_extracted(col: Collection) -> Optional[Dict[str, Any]]:
-    return col.find_one({"status": STATUS_INPUT}, sort=[("_id", 1)])
-
-
-def mark_success(col: Collection, doc_id, *, html: str) -> None:
-    col.update_one(
-        {"_id": doc_id},
-        {"$set": {
-            "caseHtml": html,
-            "caseHtmlScrapedAt": datetime.now(timezone.utc),
-            "status": STATUS_OK,
-        }}
+# def fetch_oldest_extracted(col: Collection) -> Optional[Dict[str, Any]]:
+#     return col.find_one({"status": STATUS_INPUT}, sort=[("_id", 1)])
+def claim_oldest_extracted(col: Collection) -> Optional[Dict[str, Any]]:
+    return col.find_one_and_update(
+        {"status": STATUS_INPUT},  # extracted
+        {"$set": {"status": STATUS_PROCESSING, "caseHtmlScrapingAt": datetime.now(timezone.utc)}},
+        sort=[("_id", 1)],
+        return_document=ReturnDocument.AFTER,
     )
 
 
+# def mark_success(col: Collection, doc_id, *, html: str) -> None:
+#     col.update_one(
+#         {"_id": doc_id},
+#         {"$set": {
+#             "caseHtml": html,
+#             "caseHtmlScrapedAt": datetime.now(timezone.utc),
+#             "status": STATUS_OK,
+#         }}
+#     )
+
+
+# def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
+#     col.update_one(
+#         {"_id": doc_id},
+#         {"$set": {
+#             "caseHtmlError": error_msg,
+#             "caseHtmlScrapedAt": datetime.now(timezone.utc),
+#             "status": STATUS_ERROR,
+#         }}
+#     )
+def mark_success(col: Collection, doc_id, *, html: str) -> None:
+    col.update_one(
+        {"_id": doc_id, "status": STATUS_PROCESSING},
+        {"$set": {
+            "caseHtml": html,
+            "caseHtmlScrapedAt": datetime.now(timezone.utc),
+            "status": STATUS_OK,  # caseScraped
+        }}
+    )
+
 def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
     col.update_one(
-        {"_id": doc_id},
+        {"_id": doc_id, "status": STATUS_PROCESSING},
         {"$set": {
             "caseHtmlError": error_msg,
             "caseHtmlScrapedAt": datetime.now(timezone.utc),
@@ -161,7 +190,9 @@ async def main() -> int:
 
     try:
         col = get_collection()
-        doc = fetch_oldest_extracted(col)
+        # doc = fetch_oldest_extracted(col)
+        doc = claim_oldest_extracted(col)
+
 
         if not doc:
             print(f"Nenhum documento em {DB_NAME}.{COLLECTION} com status='{STATUS_INPUT}'.")

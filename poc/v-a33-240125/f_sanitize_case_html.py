@@ -29,6 +29,7 @@ from pymongo.errors import PyMongoError
 
 from lxml import html as lxml_html
 from lxml.etree import tostring
+from pymongo import ReturnDocument
 
 
 # =========================
@@ -43,6 +44,7 @@ COLLECTION = "case_data"
 STATUS_INPUT = "caseScraped"
 STATUS_OK = "caseSanitized"
 STATUS_ERROR = "caseSanitizeError"
+STATUS_PROCESSING = "caseSanitizing"
 
 XPATH_KEEP = "/html/body/app-root/app-home/main/app-search-detail/div/div/div[1]/mat-tab-group/div/mat-tab-body[1]"
 
@@ -56,31 +58,57 @@ def get_collection() -> Collection:
     return db[COLLECTION]
 
 
-def fetch_oldest_to_sanitize(col: Collection) -> Optional[Dict[str, Any]]:
-    return col.find_one({"status": STATUS_INPUT}, sort=[("_id", 1)])
-
-
-def mark_success(col: Collection, doc_id, *, sanitized_html: str) -> None:
-    col.update_one(
-        {"_id": doc_id},
-        {"$set": {
-            "caseHtmlSanitized": sanitized_html,
-            "caseHtmlSanitizedAt": datetime.now(timezone.utc),
-            "status": STATUS_OK,
-        }}
+# def fetch_oldest_to_sanitize(col: Collection) -> Optional[Dict[str, Any]]:
+#     return col.find_one({"status": STATUS_INPUT}, sort=[("_id", 1)])
+def claim_oldest_to_sanitize(col: Collection) -> Optional[Dict[str, Any]]:
+    return col.find_one_and_update(
+        {"status": STATUS_INPUT},  # caseScraped
+        {"$set": {"status": STATUS_PROCESSING, "caseHtmlSanitizingAt": datetime.now(timezone.utc)}},
+        sort=[("_id", 1)],
+        return_document=ReturnDocument.AFTER,
     )
 
 
+# def mark_success(col: Collection, doc_id, *, sanitized_html: str) -> None:
+#     col.update_one(
+#         {"_id": doc_id},
+#         {"$set": {
+#             "caseHtmlSanitized": sanitized_html,
+#             "caseHtmlSanitizedAt": datetime.now(timezone.utc),
+#             "status": STATUS_OK,
+#         }}
+#     )
+
+
+# def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
+#     col.update_one(
+#         {"_id": doc_id},
+#         {"$set": {
+#             "caseHtmlSanitizedError": error_msg,
+#             "caseHtmlSanitizedAt": datetime.now(timezone.utc),
+#             "status": STATUS_ERROR,
+#         }}
+#     )
+
+def mark_success(col: Collection, doc_id, *, sanitized_html: str) -> None:
+    col.update_one(
+        {"_id": doc_id, "status": STATUS_PROCESSING},
+        {"$set": {
+            "caseHtmlSanitized": sanitized_html,
+            "caseHtmlSanitizedAt": datetime.now(timezone.utc),
+            "status": STATUS_OK,  # caseSanitized
+        }}
+    )
+
 def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
     col.update_one(
-        {"_id": doc_id},
+        {"_id": doc_id, "status": STATUS_PROCESSING},
         {"$set": {
             "caseHtmlSanitizedError": error_msg,
             "caseHtmlSanitizedAt": datetime.now(timezone.utc),
             "status": STATUS_ERROR,
         }}
     )
-
 
 # =========================
 # Sanitização via XPath
@@ -130,7 +158,9 @@ def run_loop() -> int:
     processed = 0
 
     while True:
-        doc = fetch_oldest_to_sanitize(col)
+        # doc = fetch_oldest_to_sanitize(col)
+        doc = claim_oldest_to_sanitize(col)
+
         if not doc:
             print(f"✅ Nenhum documento restante com status='{STATUS_INPUT}'. Encerrando.")
             break

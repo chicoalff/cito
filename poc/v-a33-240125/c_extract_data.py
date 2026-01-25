@@ -6,6 +6,7 @@ import pymongo
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from bson import ObjectId
+from pymongo import ReturnDocument
 
 class STFExtractor:
     def __init__(self, mongo_uri: str, db_name: str):
@@ -334,23 +335,39 @@ class STFExtractor:
                     return button['id']
         
         return "N/A"
-    
-    def get_next_raw_html(self) -> Optional[Dict]:
+    def claim_next_raw_html(self) -> Optional[Dict]:
         """
-        Obtém o próximo documento raw_html com status "new" mais antigo.
-        
-        Returns:
-            dict: Documento do MongoDB ou None se não houver documentos
+        Claim atômico do próximo raw_html com status=new.
+        Troca new -> extracting na mesma operação (evita 2 workers pegarem o mesmo doc).
         """
         try:
-            query = {"status": "new"}
-            # Ordena por data de criação mais antiga primeiro
-            sort = [("_id", 1)]
-            return self.raw_html_collection.find_one(query, sort=sort)
-
+            now = datetime.now().isoformat()
+            return self.raw_html_collection.find_one_and_update(
+                {"status": "new"},
+                {"$set": {"status": "extracting", "extractingAt": now}},
+                sort=[("_id", 1)],
+                return_document=ReturnDocument.AFTER,
+            )
         except Exception as e:
-            print(f"Erro ao buscar documento: {e}")
+            print(f"Erro ao buscar/claim documento: {e}")
             return None
+
+    # def get_next_raw_html(self) -> Optional[Dict]:
+    #     """
+    #     Obtém o próximo documento raw_html com status "new" mais antigo.
+        
+    #     Returns:
+    #         dict: Documento do MongoDB ou None se não houver documentos
+    #     """
+    #     try:
+    #         query = {"status": "new"}
+    #         # Ordena por data de criação mais antiga primeiro
+    #         sort = [("_id", 1)]
+    #         return self.raw_html_collection.find_one(query, sort=sort)
+
+    #     except Exception as e:
+    #         print(f"Erro ao buscar documento: {e}")
+    #         return None
     
     def save_extracted_data(self, extracted_data: List[Dict[str, Any]]) -> bool:
         """
@@ -386,12 +403,12 @@ class STFExtractor:
         """
         try:
             result = self.raw_html_collection.update_one(
-                {"_id": doc_id},
-                {"$set": {"status": "extracted", 
-                         "processedDate": datetime.now().isoformat(),
-                         "extractedCount": self.case_data_collection.count_documents(
-                             {"sourceDocumentId": str(doc_id)}
-                         )}}
+                {"_id": doc_id, "status": "extracting"},
+                {"$set": {
+                    "status": "extracted",
+                    "processedDate": datetime.now().isoformat(),
+                    "extractedCount": self.case_data_collection.count_documents({"sourceDocumentId": str(doc_id)}),
+                }}
             )
             
             if result.modified_count > 0:
@@ -422,9 +439,10 @@ class STFExtractor:
         print("\n" + "="*60)
         print("Buscando próximo documento para processamento...")
         
-        # 1. Obter o próximo documento raw_html
-        raw_doc = self.get_next_raw_html()
-        
+        # # 1. Obter o próximo documento raw_html
+        # raw_doc = self.get_next_raw_html()
+        raw_doc = self.claim_next_raw_html()
+
         if not raw_doc:
             print("Nenhum documento com status 'new' encontrado.")
             return False

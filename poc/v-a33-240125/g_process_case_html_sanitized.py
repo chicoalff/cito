@@ -24,6 +24,7 @@ from bs4 import BeautifulSoup
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.errors import PyMongoError
+from pymongo import ReturnDocument
 
 
 # =========================
@@ -38,6 +39,7 @@ COLLECTION = "case_data"
 STATUS_INPUT = "caseSanitized"
 STATUS_OK = "caseHtmlProcessed"
 STATUS_ERROR = "caseHtmlProcessError"
+STATUS_PROCESSING = "caseProcessing"
 
 
 # =========================
@@ -71,10 +73,17 @@ def get_collection() -> Collection:
     return db[COLLECTION]
 
 
-def fetch_oldest_to_process(col: Collection) -> Optional[Dict[str, Any]]:
-    return col.find_one({"status": STATUS_INPUT}, sort=[("_id", 1)])
+# def fetch_oldest_to_process(col: Collection) -> Optional[Dict[str, Any]]:
+#     return col.find_one({"status": STATUS_INPUT}, sort=[("_id", 1)])
+def claim_oldest_to_process(col: Collection) -> Optional[Dict[str, Any]]:
+    return col.find_one_and_update(
+        {"status": STATUS_INPUT},  # caseSanitized
+        {"$set": {"status": STATUS_PROCESSING, "caseHtmlProcessingAt": datetime.now(timezone.utc)}},
+        sort=[("_id", 1)],
+        return_document=ReturnDocument.AFTER,
+    )
 
-
+""" 
 def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
     col.update_one(
         {"_id": doc_id},
@@ -84,7 +93,16 @@ def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
             "status": STATUS_ERROR,
         }}
     )
-
+ """
+def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
+    col.update_one(
+        {"_id": doc_id, "status": STATUS_PROCESSING},
+        {"$set": {
+            "caseHtmlProcessedAt": datetime.now(timezone.utc),
+            "caseHtmlProcessError": error_msg,
+            "status": STATUS_ERROR,
+        }}
+    )
 
 # =========================
 # Extraction helpers
@@ -290,7 +308,9 @@ def run_loop() -> int:
     total = 0
 
     while True:
-        doc = fetch_oldest_to_process(col)
+#        doc = fetch_oldest_to_process(col)
+        doc = claim_oldest_to_process(col)
+
         if not doc:
             break
 
@@ -313,7 +333,12 @@ def run_loop() -> int:
             update_fields["caseHtmlProcessedAt"] = datetime.now(timezone.utc)
             update_fields["status"] = STATUS_OK
 
-            col.update_one({"_id": doc_id}, {"$set": update_fields})
+            #col.update_one({"_id": doc_id}, {"$set": update_fields})
+            col.update_one(
+                {"_id": doc_id, "status": STATUS_PROCESSING},
+                {"$set": update_fields}
+            )
+
 
             elapsed = time.time() - start
             total += 1
