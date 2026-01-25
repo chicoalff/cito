@@ -368,28 +368,71 @@ class STFExtractor:
     #     except Exception as e:
     #         print(f"Erro ao buscar documento: {e}")
     #         return None
-    
+        
     def save_extracted_data(self, extracted_data: List[Dict[str, Any]]) -> bool:
         """
-        Salva os dados extraídos na collection case_data.
+        Salva os dados extraídos na collection case_data usando UPSERT por stfDecisionId.
         
-        Args:
-            extracted_data (list): Lista de dicionários com dados extraídos
-            
+        Regras:
+        - Se já existir documento com o mesmo stfDecisionId: atualiza campos ($set)
+        - Se não existir: insere novo documento ($setOnInsert) + $set
+        
         Returns:
             bool: True se salvou com sucesso, False caso contrário
         """
         try:
-            if extracted_data:
-                result = self.case_data_collection.insert_many(extracted_data)
-                print(f"Dados salvos com sucesso. {len(result.inserted_ids)} documentos inseridos.")
-                return True
-            else:
+            if not extracted_data:
                 print("Nenhum dado para salvar.")
                 return False
+
+            inserted = 0
+            updated = 0
+            skipped = 0
+
+            for item in extracted_data:
+                stf_id = item.get("stfDecisionId")
+                if not stf_id or stf_id == "N/A":
+                    skipped += 1
+                    continue
+
+                now = datetime.now().isoformat()
+
+                # Campos que sempre atualizam (extraídos do HTML)
+                set_fields = dict(item)
+                set_fields["lastExtractedAt"] = now
+                # Opcional: mantém a data original de extração também
+                # set_fields["extractionDate"] = now  # (se você quiser sobrescrever sempre)
+
+                # Campos apenas na criação do documento
+                set_on_insert_fields = {
+                    "createdAt": now,
+                }
+
+                result = self.case_data_collection.update_one(
+                    {"stfDecisionId": stf_id},
+                    {
+                        "$set": set_fields,
+                        "$setOnInsert": set_on_insert_fields,
+                    },
+                    upsert=True,
+                )
+
+                # Métricas:
+                if result.upserted_id is not None:
+                    inserted += 1
+                elif result.modified_count > 0:
+                    updated += 1
+
+            print(
+                "Persistência concluída em case_data: "
+                f"{inserted} inseridos, {updated} atualizados, {skipped} ignorados (stfDecisionId inválido)."
+            )
+            return True
+
         except Exception as e:
-            print(f"Erro ao salvar dados: {e}")
+            print(f"Erro ao salvar dados (upsert): {e}")
             return False
+
     
     def update_raw_html_status(self, doc_id: ObjectId) -> bool:
         """

@@ -5,12 +5,17 @@ e_fetch_case_html.py
 
 Requisitos atendidos:
 - Buscar na collection "case_data" o documento mais antigo com status="extracted"
-- Ler o campo caseUrl
+- Validar stfDecisionId e caseUrl antes de processar
+- Fazer claim atômico (lock) para evitar concorrência (extracted -> caseScraping)
 - Acessar caseUrl e obter o HTML integral (renderizado, se necessário)
 - Atualizar o documento em "case_data":
     - caseHtml: HTML completo
     - caseHtmlScrapedAt (UTC)
     - status: "caseScraped"
+- Em caso de erro:
+    - caseHtmlError
+    - caseHtmlScrapedAt (UTC)
+    - status: "caseScrapeError"
 
 Correção para Codespaces/SSL:
 - NÃO usa requests por padrão (evita SSLCertVerificationError no container).
@@ -29,14 +34,13 @@ from typing import Optional, Dict, Any, Tuple
 
 import certifi
 import requests
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 from pymongo.collection import Collection
 from pymongo.errors import PyMongoError
-from pymongo import ReturnDocument
 
 
 # =========================
-# Mongo (fixo)
+# Mongo (fixo)  [RECOMENDADO: mover para ENV]
 # =========================
 MONGO_USER = "cito"
 MONGO_PASS = "fyu9WxkHakGKHeoq"
@@ -45,10 +49,9 @@ DB_NAME = "cito-v-a33-240125"
 COLLECTION = "case_data"
 
 STATUS_INPUT = "extracted"
+STATUS_PROCESSING = "caseScraping"
 STATUS_OK = "caseScraped"
 STATUS_ERROR = "caseScrapeError"
-STATUS_PROCESSING = "caseScraping"
-
 
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -76,46 +79,41 @@ def get_collection() -> Collection:
     return db[COLLECTION]
 
 
-# def fetch_oldest_extracted(col: Collection) -> Optional[Dict[str, Any]]:
-#     return col.find_one({"status": STATUS_INPUT}, sort=[("_id", 1)])
 def claim_oldest_extracted(col: Collection) -> Optional[Dict[str, Any]]:
+    """
+    Claim atômico do documento mais antigo apto para scraping.
+    Evita:
+    - docs sem stfDecisionId/caseUrl
+    - reprocesso quando caseHtml já existe (ou está vazio/None, permitido via OR)
+    """
     return col.find_one_and_update(
-        {"status": STATUS_INPUT},  # extracted
+        {
+            "status": STATUS_INPUT,  # extracted
+            "stfDecisionId": {"$exists": True, "$nin": [None, "", "N/A"]},
+            "caseUrl": {"$exists": True, "$nin": [None, "", "N/A"]},
+            # Só processa se ainda não tem HTML (ou está vazio/None, caso queira reprocessar)
+            "$or": [
+                {"caseHtml": {"$exists": False}},
+                {"caseHtml": None},
+                {"caseHtml": ""},
+            ],
+        },
         {"$set": {"status": STATUS_PROCESSING, "caseHtmlScrapingAt": datetime.now(timezone.utc)}},
         sort=[("_id", 1)],
         return_document=ReturnDocument.AFTER,
     )
 
 
-# def mark_success(col: Collection, doc_id, *, html: str) -> None:
-#     col.update_one(
-#         {"_id": doc_id},
-#         {"$set": {
-#             "caseHtml": html,
-#             "caseHtmlScrapedAt": datetime.now(timezone.utc),
-#             "status": STATUS_OK,
-#         }}
-#     )
-
-
-# def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
-#     col.update_one(
-#         {"_id": doc_id},
-#         {"$set": {
-#             "caseHtmlError": error_msg,
-#             "caseHtmlScrapedAt": datetime.now(timezone.utc),
-#             "status": STATUS_ERROR,
-#         }}
-#     )
 def mark_success(col: Collection, doc_id, *, html: str) -> None:
     col.update_one(
         {"_id": doc_id, "status": STATUS_PROCESSING},
         {"$set": {
             "caseHtml": html,
             "caseHtmlScrapedAt": datetime.now(timezone.utc),
-            "status": STATUS_OK,  # caseScraped
+            "status": STATUS_OK,
         }}
     )
+
 
 def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
     col.update_one(
@@ -162,6 +160,8 @@ async def fetch_html_playwright(url: str) -> str:
             "Playwright não disponível. Instale com: pip install playwright && playwright install"
         ) from e
 
+    from contextlib import suppress
+
     async with async_playwright() as p:
         browser = await p.chromium.launch(
             headless=True,
@@ -173,12 +173,24 @@ async def fetch_html_playwright(url: str) -> str:
             extra_http_headers={"accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"},
         )
         page = await context.new_page()
+
         try:
             await page.goto(url, wait_until="networkidle", timeout=60_000)
             await page.wait_for_timeout(3000)
             return await page.content()
+
+        except (asyncio.CancelledError, KeyboardInterrupt):
+            # Cancelamento/interrupção: não tentar continuar fluxo normal
+            raise
+
         finally:
-            await browser.close()
+            # Cleanup idempotente e tolerante a "TargetClosed"
+            with suppress(Exception):
+                await page.close()
+            with suppress(Exception):
+                await context.close()
+            with suppress(Exception):
+                await browser.close()
 
 
 # =========================
@@ -190,25 +202,23 @@ async def main() -> int:
 
     try:
         col = get_collection()
-        # doc = fetch_oldest_extracted(col)
         doc = claim_oldest_extracted(col)
-
-
         if not doc:
-            print(f"Nenhum documento em {DB_NAME}.{COLLECTION} com status='{STATUS_INPUT}'.")
             return 0
 
         doc_id = doc["_id"]
-        case_url = (doc.get("caseUrl") or "").strip()
+        stf_id = doc.get("stfDecisionId")
 
-        print(f"Mongo: db={DB_NAME} collection={COLLECTION}")
-        print(f"Doc: _id={doc_id} status={doc.get('status')}")
-        print(f"caseUrl: {case_url}")
+        # 🔎 LOG NO TERMINAL (requisito)
+        print("📄 Documento selecionado para scraping:")
+        print(f"   _id: {doc_id}")
+        print(f"   stfDecisionId: {stf_id}")
 
-        if not case_url:
-            msg = "Documento não possui 'caseUrl'."
-            print(f"❌ {msg}")
-            mark_error(col, doc_id, error_msg=msg)
+        case_url = doc.get("caseUrl")
+
+        # defesa extra (mesmo com filtro no claim)
+        if not stf_id or stf_id == "N/A" or not case_url or case_url == "N/A":
+            mark_error(col, doc_id, error_msg="Documento inválido: stfDecisionId ou caseUrl ausente/N/A")
             return 1
 
         html = ""
@@ -221,6 +231,7 @@ async def main() -> int:
                 print(f"📶 HTTP {http_status} | HTML len={len(html)}")
             except Exception as e:
                 print(f"⚠️ requests falhou ({e}). Tentando Playwright...")
+                html = ""
 
         if not html:
             print("🌐 Buscando HTML via Playwright...")
