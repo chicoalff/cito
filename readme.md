@@ -1,4 +1,3 @@
-```markdown
 # Projeto CITO  
 **Monitoramento, Estruturação e Análise de Jurisprudência do STF**
 
@@ -225,4 +224,3 @@ Benefícios:
 O Projeto CITO estabelece uma base sólida para **transformar jurisprudência em dados estruturados e analisáveis**, combinando engenharia de dados, rastreabilidade documental e visão jurídica. Sua arquitetura modular, orientada a etapas e protegida por locks atômicos, permite evolução incremental com segurança técnica e clareza operacional.
 
 Este repositório representa o **núcleo técnico do pipeline**, preparado para escalar funcionalmente e integrar camadas analíticas mais avançadas no futuro.
-```
