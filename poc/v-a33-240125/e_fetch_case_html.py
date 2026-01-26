@@ -3,28 +3,34 @@
 """
 e_fetch_case_html.py
 
-Requisitos atendidos:
-- Buscar na collection "case_data" o documento mais antigo com status="extracted"
-- Validar stfDecisionId e caseUrl antes de processar
-- Fazer claim atômico (lock) para evitar concorrência (extracted -> caseScraping)
-- Acessar caseUrl e obter o HTML integral (renderizado, se necessário)
-- Atualizar o documento em "case_data":
-    - caseHtml: HTML completo
-    - caseHtmlScrapedAt (UTC)
-    - status: "caseScraped"
-- Em caso de erro:
-    - caseHtmlError
-    - caseHtmlScrapedAt (UTC)
-    - status: "caseScrapeError"
+Implementações incluídas:
+1) Critério de seleção controlado (não reprocessar HTML sem necessidade)
+   - Default: processa apenas docs sem caseContent.originalHtml (ou vazio)
+   - FORCE_REFETCH=true: permite reprocessar e sobrescrever originalHtml
 
-Correção para Codespaces/SSL:
-- NÃO usa requests por padrão (evita SSLCertVerificationError no container).
-- Usa Playwright headless para obter o HTML (navegador lida com SSL/JS melhor nesse ambiente).
-- Opcional: habilitar fallback requests com env USE_REQUESTS_FIRST=true
+2) Índices no MongoDB para o padrão de busca/claim
+   - Cria (idempotente) índice composto: (status.pipelineStatus, _id)
+   - Opcionalmente cria índice parcial para documentos sem originalHtml
+     (habilite via env CREATE_PARTIAL_INDEX=true)
+
+Fluxo:
+- Claim atômico do doc mais antigo elegível:
+    status.pipelineStatus: listExtracted|extracted -> caseScraping
+- Fetch HTML via Playwright (principal) ou requests (opcional)
+- Atualiza o doc:
+    - caseContent.originalHtml (sempre sobrescreve quando selecionado)
+    - processing.caseHtmlScrapedAt (UTC)
+    - status.pipelineStatus: caseScraped
+- Em erro:
+    - processing.caseHtmlError
+    - processing.caseHtmlScrapedAt (UTC)
+    - status.pipelineStatus: caseScrapeError
 
 Env vars:
 - USE_REQUESTS_FIRST=true|false (default false)
-- STF_SSL_VERIFY=true|false (default true)  # usado apenas no requests
+- STF_SSL_VERIFY=true|false (default true)  # apenas requests
+- FORCE_REFETCH=true|false (default false)
+- CREATE_PARTIAL_INDEX=true|false (default false)
 """
 
 import asyncio
@@ -34,24 +40,27 @@ from typing import Optional, Dict, Any, Tuple
 
 import certifi
 import requests
+from markdownify import markdownify as md  # Install with: pip install markdownify
+from math import ceil
 from pymongo import MongoClient, ReturnDocument
 from pymongo.collection import Collection
 from pymongo.errors import PyMongoError
 
 
-# =========================
-# Mongo (fixo)  [RECOMENDADO: mover para ENV]
-# =========================
+# ------------------------------------------------------------
+# Mongo (fixo) [recomendado migrar para ENV]
+# ------------------------------------------------------------
 MONGO_USER = "cito"
 MONGO_PASS = "fyu9WxkHakGKHeoq"
 MONGO_URI = f"mongodb+srv://{MONGO_USER}:{MONGO_PASS}@cluster0.gb8bzlp.mongodb.net/?appName=Cluster0"
 DB_NAME = "cito-v-a33-240125"
 COLLECTION = "case_data"
 
-STATUS_INPUT = "extracted"
-STATUS_PROCESSING = "caseScraping"
-STATUS_OK = "caseScraped"
-STATUS_ERROR = "caseScrapeError"
+# Pipeline status (schema atual)
+PIPELINE_INPUT = "listExtracted"   # ou "extracted" (fallback)
+PIPELINE_PROCESSING = "caseScraping"
+PIPELINE_OK = "caseScraped"
+PIPELINE_ERROR = "caseScrapeError"
 
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -63,72 +72,268 @@ def _env_bool(name: str, default: bool) -> bool:
     v = os.getenv(name)
     if v is None:
         return default
-    return v.strip().lower() in ("1", "true", "yes", "y", "on")
+    return v.strip().lower() in ("1", "true", "yes", "y", "on", "sim", "s")
 
 
 USE_REQUESTS_FIRST = _env_bool("USE_REQUESTS_FIRST", False)
 SSL_VERIFY = _env_bool("STF_SSL_VERIFY", True)
+FORCE_REFETCH = _env_bool("FORCE_REFETCH", False)
+CREATE_PARTIAL_INDEX = _env_bool("CREATE_PARTIAL_INDEX", False)
 
 
-# =========================
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+# ------------------------------------------------------------
 # Mongo helpers
-# =========================
+# ------------------------------------------------------------
 def get_collection() -> Collection:
     client = MongoClient(MONGO_URI)
     db = client[DB_NAME]
     return db[COLLECTION]
 
 
+def ensure_indexes(col: Collection) -> None:
+    """
+    Cria índices (idempotente). Não quebra se já existirem.
+
+    Índice principal para claim (sempre recomendado):
+      - { "status.pipelineStatus": 1, "_id": 1 }
+
+    Índice parcial opcional (mais seletivo) para docs sem originalHtml:
+      - habilitar via CREATE_PARTIAL_INDEX=true
+    """
+    try:
+        col.create_index(
+            [("status.pipelineStatus", 1), ("_id", 1)],
+            name="idx_claim_pipeline_id",
+            background=True,
+        )
+
+        if CREATE_PARTIAL_INDEX:
+            # Índice parcial para acelerar o modo default (sem HTML).
+            # Cobre casos em que originalHtml não existe / null / vazio.
+            col.create_index(
+                [("status.pipelineStatus", 1), ("_id", 1)],
+                name="idx_claim_pipeline_id_no_html_partial",
+                background=True,
+                partialFilterExpression={
+                    "$or": [
+                        {"caseContent": {"$exists": False}},
+                        {"caseContent.originalHtml": {"$exists": False}},
+                        {"caseContent.originalHtml": None},
+                        {"caseContent.originalHtml": ""},
+                    ]
+                },
+            )
+
+    except Exception as e:
+        # Não falhar o processamento por problemas de index
+        print(f"⚠️ Aviso: falha ao garantir índices: {e}")
+
+
+def _get_stf_decision_id(doc: Dict[str, Any]) -> Optional[str]:
+    v = doc.get("identity", {}).get("stfDecisionId")
+    if isinstance(v, str) and v.strip() and v.strip() != "N/A":
+        return v.strip()
+    return None
+
+
+def _get_case_url(doc: Dict[str, Any]) -> Optional[str]:
+    v = doc.get("stfCard", {}).get("caseUrl")
+    if isinstance(v, str) and v.strip() and v.strip() != "N/A":
+        return v.strip()
+    return None
+
+
 def claim_oldest_extracted(col: Collection) -> Optional[Dict[str, Any]]:
     """
     Claim atômico do documento mais antigo apto para scraping.
-    Evita:
-    - docs sem stfDecisionId/caseUrl
-    - reprocesso quando caseHtml já existe (ou está vazio/None, permitido via OR)
+
+    Critérios base:
+    - status.pipelineStatus em estado de entrada (PIPELINE_INPUT ou "extracted")
+    - identity.stfDecisionId válido
+    - stfCard.caseUrl válido
+
+    Critério controlado:
+    - FORCE_REFETCH=false (default): só claim se NÃO existir originalHtml (ou estiver vazio)
+    - FORCE_REFETCH=true: ignora esse filtro e permite sobrescrever.
     """
+    base_filter: Dict[str, Any] = {
+        "status.pipelineStatus": {"$in": [PIPELINE_INPUT, "extracted"]},
+        "identity.stfDecisionId": {"$exists": True, "$nin": [None, "", "N/A"]},
+        "stfCard.caseUrl": {"$exists": True, "$nin": [None, "", "N/A"]},
+    }
+
+    if not FORCE_REFETCH:
+        base_filter["$or"] = [
+            {"caseContent": {"$exists": False}},
+            {"caseContent.originalHtml": {"$exists": False}},
+            {"caseContent.originalHtml": None},
+            {"caseContent.originalHtml": ""},
+        ]
+
     return col.find_one_and_update(
+        base_filter,
         {
-            "status": STATUS_INPUT,  # extracted
-            "stfDecisionId": {"$exists": True, "$nin": [None, "", "N/A"]},
-            "caseUrl": {"$exists": True, "$nin": [None, "", "N/A"]},
-            # Só processa se ainda não tem HTML (ou está vazio/None, caso queira reprocessar)
-            "$or": [
-                {"caseHtml": {"$exists": False}},
-                {"caseHtml": None},
-                {"caseHtml": ""},
-            ],
+            "$set": {
+                "status.pipelineStatus": PIPELINE_PROCESSING,
+                "processing.caseHtmlScrapingAt": utc_now(),
+            }
         },
-        {"$set": {"status": STATUS_PROCESSING, "caseHtmlScrapingAt": datetime.now(timezone.utc)}},
         sort=[("_id", 1)],
         return_document=ReturnDocument.AFTER,
     )
 
 
 def mark_success(col: Collection, doc_id, *, html: str) -> None:
+    """
+    Grava/atualiza:
+    - caseContent.originalHtml (sempre sobrescreve quando selecionado)
+    - processing.caseHtmlScrapedAt
+    - status.pipelineStatus
+    Limpa erro anterior, se existir.
+    """
     col.update_one(
-        {"_id": doc_id, "status": STATUS_PROCESSING},
-        {"$set": {
-            "caseHtml": html,
-            "caseHtmlScrapedAt": datetime.now(timezone.utc),
-            "status": STATUS_OK,
-        }}
+        {"_id": doc_id},
+        {
+            "$set": {
+                "caseContent.originalHtml": html,
+                "processing.caseHtmlScrapedAt": utc_now(),
+                "status.pipelineStatus": PIPELINE_OK,
+                "processing.caseHtmlError": None,
+            }
+        },
     )
 
 
 def mark_error(col: Collection, doc_id, *, error_msg: str) -> None:
     col.update_one(
-        {"_id": doc_id, "status": STATUS_PROCESSING},
-        {"$set": {
-            "caseHtmlError": error_msg,
-            "caseHtmlScrapedAt": datetime.now(timezone.utc),
-            "status": STATUS_ERROR,
-        }}
+        {"_id": doc_id},
+        {
+            "$set": {
+                "processing.caseHtmlError": error_msg,
+                "processing.caseHtmlScrapedAt": utc_now(),
+                "status.pipelineStatus": PIPELINE_ERROR,
+            }
+        },
     )
 
 
-# =========================
+def calculate_size_kb(content: str) -> int:
+    """Calculate the size of the content in kilobytes."""
+    return ceil(len(content.encode("utf-8")) / 1024)
+
+
+def sanitize_and_convert_to_markdown(html: str) -> str:
+    """Sanitize HTML and convert it to Markdown."""
+    try:
+        from bs4 import BeautifulSoup  # Optional but preferred for clean sanitization
+        soup = BeautifulSoup(html, "html.parser")
+        for tag in soup(["script", "style", "noscript", "iframe", "object", "embed"]):
+            tag.decompose()
+        # Prefer body content if available
+        html = str(soup.body) if soup.body else str(soup)
+    except Exception:
+        # Fallback: remove script/style blocks via simple heuristics
+        import re
+
+        html = re.sub(r"<(script|style)[^>]*>.*?</\1>", "", html, flags=re.DOTALL | re.IGNORECASE)
+
+    return md(
+        html,
+        heading_style="ATX",
+        bullet="*",
+        strong_em_symbol="*",
+        strip=["script", "style", "noscript", "iframe", "object", "embed"],
+    ).strip()
+
+
+def update_audit_status(col: Collection, doc_id, status: str) -> None:
+    """Update the audit.sourceStatus field."""
+    col.update_one(
+        {"_id": doc_id},
+        {"$set": {"audit.sourceStatus": status}},
+    )
+
+
+async def process_item(col: Collection, doc: Dict[str, Any], auto_confirm: bool) -> None:
+    """Process a single item."""
+    doc_id = doc["_id"]
+    stf_id = _get_stf_decision_id(doc)
+    case_title = doc.get("stfCard", {}).get("caseTitle", "N/A")
+    print(f"Processo: {case_title}")
+
+    try:
+        # Fetch HTML
+        case_url = _get_case_url(doc)
+        if USE_REQUESTS_FIRST:
+            html = fetch_html_requests(case_url)[0]
+        else:
+            html = await fetch_html_playwright(case_url)
+        print("Obter HTML da decisão:          OK")
+        html_size_kb = calculate_size_kb(html)
+        print(f"Tamanho html:                   {html_size_kb} kb")
+
+        # Save original HTML
+        mark_success(col, doc_id, html=html)
+        print("Gravar HTML original:           OK")
+
+        # Convert to Markdown
+        markdown = sanitize_and_convert_to_markdown(html)
+        print("Converter para Markdown:        OK")
+        markdown_size_kb = calculate_size_kb(markdown)
+        print(f"Tamanho markdown:               {markdown_size_kb} kb")
+
+        # Save Markdown
+        col.update_one(
+            {"_id": doc_id},
+            {"$set": {"caseContent.contentMd": markdown}},
+        )
+        print("Gravar markdown:                OK")
+
+        # Update audit status
+        update_audit_status(col, doc_id, "Processed")
+        print("PROCESSAMENTO ITEM FINALIZADO")
+
+    except Exception as e:
+        print(f"Erro ao processar item {doc_id}: {e}")
+        mark_error(col, doc_id, error_msg=str(e))
+
+
+def get_processing_options(col: Collection) -> Tuple[int, int, int]:
+    """Get processing options and counts."""
+    total_items = col.count_documents({})
+    new_items = col.count_documents({"caseContent.contentMd": {"$exists": False}})
+    existing_items = total_items - new_items
+    return total_items, new_items, existing_items
+
+
+def user_prompt(total: int, new: int, existing: int) -> Tuple[int, bool]:
+    """Prompt user for processing options."""
+    print("\n-------------------------------------")
+    print("OBTER E SANITIZAR HTML DAS DECISÕES")
+    print("-------------------------------------")
+    print(f"Total de itens: {total}")
+    print(f"Novos: {new}")
+    print(f"Existentes: {existing}")
+    print("\n-------------------------------------")
+    print("ESCOLHA UMA OPÇÃO")
+    print("-------------------------------------")
+    print("1 - PROCESSAR TUDO")
+    print("2 - PROCESSAR NOVOS")
+    print("3 - ATUALIZAR EXISTENTES")
+    print("-------------------------------------")
+
+    option = int(input("Escolha uma opção: "))
+    auto_confirm = input("Processar todos automaticamente sem confirmação? (s/n): ").strip().lower() == "s"
+    return option, auto_confirm
+
+
+# ------------------------------------------------------------
 # requests (opcional)
-# =========================
+# ------------------------------------------------------------
 def fetch_html_requests(url: str) -> Tuple[str, int]:
     headers = {
         "User-Agent": USER_AGENT,
@@ -149,9 +354,9 @@ def fetch_html_requests(url: str) -> Tuple[str, int]:
     return resp.text, resp.status_code
 
 
-# =========================
+# ------------------------------------------------------------
 # Playwright (principal)
-# =========================
+# ------------------------------------------------------------
 async def fetch_html_playwright(url: str) -> str:
     try:
         from playwright.async_api import async_playwright
@@ -180,11 +385,9 @@ async def fetch_html_playwright(url: str) -> str:
             return await page.content()
 
         except (asyncio.CancelledError, KeyboardInterrupt):
-            # Cancelamento/interrupção: não tentar continuar fluxo normal
             raise
 
         finally:
-            # Cleanup idempotente e tolerante a "TargetClosed"
             with suppress(Exception):
                 await page.close()
             with suppress(Exception):
@@ -193,67 +396,52 @@ async def fetch_html_playwright(url: str) -> str:
                 await browser.close()
 
 
-# =========================
+# ------------------------------------------------------------
 # Main
-# =========================
+# ------------------------------------------------------------
 async def main() -> int:
     col: Optional[Collection] = None
-    doc_id = None
 
     try:
         col = get_collection()
-        doc = claim_oldest_extracted(col)
-        if not doc:
-            return 0
+        ensure_indexes(col)
 
-        doc_id = doc["_id"]
-        stf_id = doc.get("stfDecisionId")
+        # Get processing options
+        total, new, existing = get_processing_options(col)
+        option, auto_confirm = user_prompt(total, new, existing)
 
-        # 🔎 LOG NO TERMINAL (requisito)
-        print("📄 Documento selecionado para scraping:")
-        print(f"   _id: {doc_id}")
-        print(f"   stfDecisionId: {stf_id}")
-
-        case_url = doc.get("caseUrl")
-
-        # defesa extra (mesmo com filtro no claim)
-        if not stf_id or stf_id == "N/A" or not case_url or case_url == "N/A":
-            mark_error(col, doc_id, error_msg="Documento inválido: stfDecisionId ou caseUrl ausente/N/A")
+        # Filter documents based on user choice
+        if option == 1:
+            filter_query = {}
+        elif option == 2:
+            filter_query = {"caseContent.contentMd": {"$exists": False}}
+        elif option == 3:
+            filter_query = {"caseContent.contentMd": {"$exists": True}}
+        else:
+            print("Opção inválida.")
             return 1
 
-        html = ""
+        docs = col.find(filter_query).sort("_id", 1)
+        total_to_process = col.count_documents(filter_query)
+        print(f"\n-------------------------------------")
+        print(f"PROCESSAMENTO INICIADO - ITENS {total_to_process}")
+        print(f"-------------------------------------")
 
-        # Preferência: Playwright (evita SSL do requests no Codespaces)
-        if USE_REQUESTS_FIRST:
-            try:
-                print("🌐 Buscando HTML via requests...")
-                html, http_status = fetch_html_requests(case_url)
-                print(f"📶 HTTP {http_status} | HTML len={len(html)}")
-            except Exception as e:
-                print(f"⚠️ requests falhou ({e}). Tentando Playwright...")
-                html = ""
+        for i, doc in enumerate(docs, start=1):
+            print(f"\nItem {i}/{total_to_process}: {doc['_id']}")
+            await process_item(col, doc, auto_confirm)
+            if not auto_confirm:
+                confirm = input("Processar próximo item? (s/n): ").strip().lower()
+                if confirm != "s":
+                    break
 
-        if not html:
-            print("🌐 Buscando HTML via Playwright...")
-            html = await fetch_html_playwright(case_url)
-            print(f"✅ Playwright HTML len={len(html)}")
-
-        mark_success(col, doc_id, html=html)
-        print(f"🗃️ Atualizado no MongoDB: status='{STATUS_OK}' (caseHtml gravado)")
+        print("\n-------------------------------------")
+        print("PROCESSAMENTO FINALIZADO")
+        print("-------------------------------------")
         return 0
 
-    except PyMongoError as e:
-        msg = f"Erro MongoDB: {e}"
-        print(f"❌ {msg}")
-        if col is not None and doc_id is not None:
-            mark_error(col, doc_id, error_msg=msg)
-        return 2
-
     except Exception as e:
-        msg = str(e)
-        print(f"❌ Erro: {msg}")
-        if col is not None and doc_id is not None:
-            mark_error(col, doc_id, error_msg=msg)
+        print(f"Erro: {e}")
         return 1
 
 

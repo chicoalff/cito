@@ -1,654 +1,749 @@
-import json
-import re
-from urllib.parse import urlparse, parse_qs
-from bs4 import BeautifulSoup
-import pymongo
-from datetime import datetime
-from typing import Dict, List, Optional, Any
-from bson import ObjectId
-from pymongo import ReturnDocument
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-class STFExtractor:
-    def __init__(self, mongo_uri: str, db_name: str):
-        """
-        Inicializa o extrator de dados do STF com conexão ao MongoDB.
-        
-        Args:
-            mongo_uri (str): URI de conexão com o MongoDB
-            db_name (str): Nome do banco de dados
-        """
-        self.client = pymongo.MongoClient(mongo_uri)
-        self.db = self.client[db_name]
-        self.raw_html_collection = self.db["raw_html"]
-        self.case_data_collection = self.db["case_data"]
-        
-    def extract_single_document(self, html_content: str, source_doc_id: str) -> List[Dict[str, Any]]:
-        """
-        Analisa o conteúdo HTML completo e extrai todas as decisões encontradas.
-        
-        Args:
-            html_content (str): Conteúdo HTML completo da página
-            source_doc_id (str): ID do documento MongoDB original
-            
-        Returns:
-            list: Lista de dicionários com os dados extraídos de cada decisão
-        """
-        soup = BeautifulSoup(html_content, "html.parser")
-        resultados = []
-        
-        # Encontra todos os contêineres de resultados
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Set, Tuple
+
+from bs4 import BeautifulSoup
+from bson import ObjectId
+from pymongo import MongoClient, ReturnDocument
+from pymongo.collection import Collection
+from pymongo.errors import PyMongoError
+
+
+# ------------------------------------------------------------
+# 0) MONGO CONFIG (mesmas credenciais/infos do projeto)
+# ------------------------------------------------------------
+MONGO_USER = "cito"
+MONGO_PASS = "fyu9WxkHakGKHeoq"
+MONGO_URI = f"mongodb+srv://{MONGO_USER}:{MONGO_PASS}@cluster0.gb8bzlp.mongodb.net/?appName=Cluster0"
+DB_NAME = "cito-v-a33-240125"
+
+SOURCE_COLLECTION = "raw_html"   # origem
+DEST_COLLECTION = "case_data"    # destino
+
+
+# ------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def iso_now() -> str:
+    return utc_now().isoformat()
+
+
+def safe_int(v: Any, default: int = 0) -> int:
+    try:
+        if v is None:
+            return default
+        s = str(v).strip()
+        if not s:
+            return default
+        return int(float(s.replace(",", ".")))
+    except Exception:
+        return default
+
+
+def get_db_client() -> MongoClient:
+    return MongoClient(MONGO_URI)
+
+
+def get_collections(client: MongoClient) -> Tuple[Collection, Collection]:
+    db = client[DB_NAME]
+    return db[SOURCE_COLLECTION], db[DEST_COLLECTION]
+
+
+def extract_html_from_raw_doc(raw_doc: Dict[str, Any]) -> str:
+    """
+    Suporta os dois formatos:
+    - antigo: raw_doc["htmlRaw"]
+    - novo:  raw_doc["payload"]["htmlRaw"]
+    """
+    if isinstance(raw_doc.get("htmlRaw"), str) and raw_doc.get("htmlRaw"):
+        return raw_doc["htmlRaw"]
+    payload = raw_doc.get("payload")
+    if isinstance(payload, dict) and isinstance(payload.get("htmlRaw"), str):
+        return payload["htmlRaw"]
+    return ""
+
+
+def str_objectid(v: Any) -> str:
+    try:
+        return str(v)
+    except Exception:
+        return ""
+
+
+def _clean_str(v: Any) -> Optional[str]:
+    if v is None:
+        return None
+    s = str(v).strip()
+    if not s or s == "N/A":
+        return None
+    return s
+
+
+def _clean_ws(s: str) -> str:
+    return re.sub(r"\s+", " ", (s or "")).strip()
+
+
+def _set_if(doc: Dict[str, Any], key: str, value: Any) -> None:
+    """
+    Só cria o campo se houver valor útil.
+    """
+    if value is None:
+        return
+    if isinstance(value, str):
+        v = _clean_str(value)
+        if v is None:
+            return
+        doc[key] = v
+        return
+    if isinstance(value, dict):
+        if value:
+            doc[key] = value
+        return
+    if isinstance(value, list):
+        if value:
+            doc[key] = value
+        return
+    doc[key] = value
+
+
+def _subdoc_if_any(pairs: List[Tuple[str, Any]]) -> Optional[Dict[str, Any]]:
+    out: Dict[str, Any] = {}
+    for k, v in pairs:
+        _set_if(out, k, v)
+    return out or None
+
+
+def derive_case_class_detail(case_title: str) -> Optional[str]:
+    s = _clean_str(case_title)
+    if not s:
+        return None
+    parts = s.split()
+    # sigla inicial (ADI/ADC/ADPF etc.)
+    if parts and re.fullmatch(r"[A-Z]{2,}", parts[0]):
+        return parts[0]
+    return parts[0] if parts else None
+
+
+def derive_case_number_detail(case_title: str) -> Optional[str]:
+    s = _clean_str(case_title)
+    if not s:
+        return None
+    m = re.search(r"\b(\d[\d\.\-]*)\b", s)
+    return m.group(1) if m else None
+
+
+def parse_date_ddmmyyyy(text: str) -> Optional[str]:
+    if not text:
+        return None
+    m = re.search(r"\d{2}/\d{2}/\d{4}", text)
+    return m.group(0) if m else None
+
+
+def build_query_from_raw(raw_doc: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Retorna subdoc query/ a partir do raw_html (suporta dois formatos).
+    Só inclui chaves com valor disponível.
+    """
+    search = raw_doc.get("search") if isinstance(raw_doc.get("search"), dict) else {}
+    # compat antigo
+    q_old = raw_doc
+
+    query_string = _clean_str(search.get("queryString")) or _clean_str(q_old.get("queryString"))
+
+    page_size = search.get("pageSize")
+    if page_size is None:
+        page_size = safe_int(q_old.get("pageSize"), 0) or None
+
+    inteiro_teor = search.get("inteiroTeor")
+    if inteiro_teor is None and "inteiroTeor" in q_old:
+        it = q_old.get("inteiroTeor")
+        if isinstance(it, bool):
+            inteiro_teor = it
+        else:
+            s = str(it).strip().lower()
+            if s in ("true", "1", "yes", "y", "on", "sim", "s"):
+                inteiro_teor = True
+            elif s in ("false", "0", "no", "n", "off", "nao", "não"):
+                inteiro_teor = False
+            else:
+                inteiro_teor = None
+
+    query_sub = _subdoc_if_any(
+        [
+            ("queryString", query_string),
+            ("pageSize", page_size),
+            ("inteiroTeor", inteiro_teor),
+        ]
+    )
+    return query_sub or {}
+
+
+# ------------------------------------------------------------
+# Extração (parse dos result-container)
+# ------------------------------------------------------------
+class STFListExtractor:
+    def extract_decisions(self, html: str, source_raw_id: ObjectId) -> List[Dict[str, Any]]:
+        soup = BeautifulSoup(html, "html.parser")
         containers = soup.find_all("div", class_="result-container")
-        
-        print(f"Encontrados {len(containers)} containers de resultado")
-        
-        for i, container in enumerate(containers, start=1):
-            print(f"Processando container {i}/{len(containers)}...")
-            # Extrai dados de cada container
-            decisao_data = self._extract_container_data(container, i, source_doc_id)
-            if decisao_data:
-                resultados.append(decisao_data)
-        
-        return resultados
-    
-    def _extract_container_data(self, container, local_index: int, source_doc_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Extrai todos os campos especificados de um único container de resultado.
-        
-        Args:
-            container: Objeto BeautifulSoup do container
-            local_index (int): Índice sequencial local
-            source_doc_id (str): ID do documento fonte
-            
-        Returns:
-            dict: Dicionário com todos os campos extraídos
-        """
+
+        decisions: List[Dict[str, Any]] = []
+        for idx, container in enumerate(containers, start=1):
+            data = self._extract_container_data(container, idx, source_raw_id)
+            if data:
+                decisions.append(data)
+        return decisions
+
+    def _extract_container_data(
+        self,
+        container: Any,
+        local_index: int,
+        source_raw_id: ObjectId,
+    ) -> Optional[Dict[str, Any]]:
         try:
-            # 1. localIndex - Gerado programaticamente
-            localIndex = local_index
-            
-            # 2. stfDecisionId - Extraído do link "Dados completos"
-            stfDecisionId = self._extract_stf_decision_id(container)
-            
-            # 3. caseTitle - Título da decisão
-            caseTitle = self._extract_case_title(container)
-            
-            # 4. caseUrl - URL completa
-            caseUrl = self._extract_case_url(container)
-            
-            # 5. judgingBody - Órgão julgador
-            judgingBody = self._extract_judging_body(container)
-            
-            # 6. rapporteur - Relator
-            rapporteur = self._extract_rapporteur(container)
-            
-            # 7. opinionWriter - Redator do acórdão
-            opinionWriter = self._extract_opinion_writer(container)
-            
-            # 8. judgmentDate - Data de julgamento
-            judgmentDate = self._extract_judgment_date(container)
-            
-            # 9. publicationDate - Data de publicação
-            publicationDate = self._extract_publication_date(container)
-            
-            # 10. caseClass - Classe processual
-            caseClass = self._extract_case_class(container)
-            
-            # 11. caseNumber - Número do processo
-            caseNumber = self._extract_case_number(container)
-            
-            # 12. fullTextOccurrences - Ocorrências de inteiro teor
-            fullTextOccurrences = self._extract_full_text_occurrences(container)
-            
-            # 13. indexingOccurrences - Ocorrências de indexação
-            indexingOccurrences = self._extract_indexing_occurrences(container)
-            
-            # 14. domResultContainerId - ID DOM do container
-            domResultContainerId = self._extract_dom_result_container_id(container)
-            
-            # 15. domClipboardId - ID DOM do clipboard
-            domClipboardId = self._extract_dom_clipboard_id(container)
-            
-            # Cria o dicionário com todos os dados
-            decisao_data = {
-                "localIndex": localIndex,
-                "stfDecisionId": stfDecisionId,
-                "caseTitle": caseTitle,
-                "caseUrl": caseUrl,
-                "judgingBody": judgingBody,
+            stf_decision_id = self._extract_stf_decision_id(container)
+            case_title = self._extract_case_title(container)
+            case_url = self._extract_case_url(container)
+
+            # regra: sem stfDecisionId não persiste
+            if not stf_decision_id or stf_decision_id == "N/A":
+                return None
+
+            judging_body = self._extract_label_value(container, "Órgão julgador")
+            rapporteur = self._extract_label_value(container, "Relator")
+            opinion_writer = self._extract_label_value(container, "Redator")
+
+            judgment_date = self._extract_date_by_label(container, "Julgamento")
+            publication_date = self._extract_date_by_label(container, "Publicação")
+
+            case_class = self._extract_case_class(container, case_title)
+            case_number = self._extract_case_number(container, case_title)
+
+            full_text_occ = self._extract_occurrences(container, "Inteiro teor")
+            indexing_occ = self._extract_occurrences(container, "Indexação")
+
+            dom_result_container_id = container.get("id") if hasattr(container, "get") else None
+            dom_clipboard_id = self._extract_dom_clipboard_id(container)
+
+            # Observação: mantém chaves planas aqui; a estrutura final é montada no builder
+            return {
+                "localIndex": local_index,
+                "stfDecisionId": stf_decision_id,
+                "caseTitle": case_title,
+                "caseUrl": case_url,
+                "judgingBody": judging_body,
                 "rapporteur": rapporteur,
-                "opinionWriter": opinionWriter,
-                "judgmentDate": judgmentDate,
-                "publicationDate": publicationDate,
-                "caseClass": caseClass,
-                "caseNumber": caseNumber,
-                "fullTextOccurrences": fullTextOccurrences,
-                "indexingOccurrences": indexingOccurrences,
-                "domResultContainerId": domResultContainerId,
-                "domClipboardId": domClipboardId,
-                "extractionDate": datetime.now().isoformat(),
-                "sourceDocumentId": source_doc_id,
-                "status": "extracted"
+                "opinionWriter": opinion_writer,
+                "judgmentDate": judgment_date,
+                "publicationDate": publication_date,
+                "caseClass": case_class,
+                "caseNumber": case_number,
+                "fullTextOccurrences": full_text_occ,
+                "indexingOccurrences": indexing_occ,
+                "domResultContainerId": dom_result_container_id,
+                "domClipboardId": dom_clipboard_id,
+                "sourceRawHtmlId": source_raw_id,                 # ObjectId (rastreamento interno)
+                "sourceDocumentId": str_objectid(source_raw_id),  # compat (string)
             }
-            
-            print(f"  ✓ Container {localIndex}: {caseTitle}")
-            return decisao_data
-            
-        except Exception as e:
-            print(f"  ✗ Erro ao extrair dados do container {local_index}: {e}")
+        except Exception:
             return None
-    
-    def _extract_stf_decision_id(self, container) -> str:
-        """Extrai o ID da decisão do STF."""
+
+    def _extract_stf_decision_id(self, container: Any) -> str:
         link = container.find("a", class_="mat-tooltip-trigger")
-        if link and 'href' in link.attrs:
-            href = link['href']
-            href_parts = href.split('/')
-            # Procura por segmento que comece com 'sjur'
-            for part in reversed(href_parts):
-                if part.startswith('sjur'):
+        if link and link.has_attr("href"):
+            href = link["href"]
+            parts = [p for p in href.split("/") if p]
+            for part in reversed(parts):
+                if part.startswith("sjur"):
                     return part
-            # Se não encontrar 'sjur', retorna penúltimo segmento
-            if len(href_parts) >= 2:
-                return href_parts[-2] if href_parts[-1] else href_parts[-2]
+            if parts:
+                return parts[-1]
         return "N/A"
-    
-    def _extract_case_title(self, container) -> str:
-        """Extrai o título da decisão."""
-        # Primeiro tenta encontrar via h4 direto
-        h4_element = container.find("h4", class_="ng-star-inserted")
-        if h4_element:
-            return h4_element.text.strip()
-        
-        # Tenta encontrar via link
+
+    def _extract_case_title(self, container: Any) -> str:
+        h4 = container.find("h4", class_="ng-star-inserted")
+        if h4:
+            return h4.get_text(" ", strip=True)
         link = container.find("a", class_="mat-tooltip-trigger")
         if link:
-            h4_in_link = link.find("h4", class_="ng-star-inserted")
-            if h4_in_link:
-                return h4_in_link.text.strip()
-        
+            h4_in = link.find("h4", class_="ng-star-inserted")
+            if h4_in:
+                return h4_in.get_text(" ", strip=True)
         return "N/A"
-    
-    def _extract_case_url(self, container) -> str:
-        """Extrai a URL completa da decisão."""
+
+    def _extract_case_url(self, container: Any) -> str:
         link = container.find("a", class_="mat-tooltip-trigger")
-        if link and 'href' in link.attrs:
-            href = link['href']
-            if href and not href.startswith('http'):
-                return f"https://jurisprudencia.stf.jus.br{href}"
-            return href
+        if link and link.has_attr("href"):
+            href = (link["href"] or "").strip()
+            if not href:
+                return "N/A"
+            if href.startswith("http"):
+                return href
+            return f"https://jurisprudencia.stf.jus.br{href}"
         return "N/A"
-    
-    def _extract_judging_body(self, container) -> str:
-        """Extrai o órgão julgador."""
-        # Procura por texto contendo "Órgão julgador"
+
+    def _extract_label_value(self, container: Any, label: str) -> str:
         elements = container.find_all(["h4", "span", "div"])
-        for element in elements:
-            if "Órgão julgador" in element.text:
-                # Tenta encontrar o valor no próximo elemento ou no próprio
-                if element.find_next("span"):
-                    return element.find_next("span").text.strip()
-                # Tenta extrair texto após os dois pontos
-                text_parts = element.text.split(":")
-                if len(text_parts) > 1:
-                    return text_parts[1].strip()
+        for el in elements:
+            txt = el.get_text(" ", strip=True)
+            if label in txt:
+                nxt = el.find_next("span")
+                if nxt:
+                    return nxt.get_text(" ", strip=True)
+                parts = txt.split(":")
+                if len(parts) > 1:
+                    return parts[1].strip()
         return "N/A"
-    
-    def _extract_rapporteur(self, container) -> str:
-        """Extrai o relator da decisão."""
+
+    def _extract_date_by_label(self, container: Any, label: str) -> str:
         elements = container.find_all(["h4", "span", "div"])
-        for element in elements:
-            if "Relator" in element.text:
-                if element.find_next("span"):
-                    return element.find_next("span").text.strip()
-                text_parts = element.text.split(":")
-                if len(text_parts) > 1:
-                    return text_parts[1].strip()
+        for el in elements:
+            txt = el.get_text(" ", strip=True)
+            if label in txt:
+                nxt = el.find_next("span")
+                if nxt:
+                    d = parse_date_ddmmyyyy(nxt.get_text(" ", strip=True))
+                    if d:
+                        return d
+                d = parse_date_ddmmyyyy(txt)
+                if d:
+                    return d
         return "N/A"
-    
-    def _extract_opinion_writer(self, container) -> str:
-        """Extrai o redator do acórdão."""
-        elements = container.find_all(["h4", "span", "div"])
-        for element in elements:
-            if "Redator" in element.text:
-                if element.find_next("span"):
-                    return element.find_next("span").text.strip()
-                text_parts = element.text.split(":")
-                if len(text_parts) > 1:
-                    return text_parts[1].strip()
-        return "N/A"
-    
-    def _extract_judgment_date(self, container) -> str:
-        """Extrai a data de julgamento."""
-        elements = container.find_all(["h4", "span", "div"])
-        for element in elements:
-            if "Julgamento" in element.text:
-                if element.find_next("span"):
-                    return element.find_next("span").text.strip()
-                # Tenta extrair data com regex
-                date_match = re.search(r'\d{2}/\d{2}/\d{4}', element.text)
-                if date_match:
-                    return date_match.group()
-        return "N/A"
-    
-    def _extract_publication_date(self, container) -> str:
-        """Extrai a data de publicação."""
-        elements = container.find_all(["h4", "span", "div"])
-        for element in elements:
-            if "Publicação" in element.text:
-                if element.find_next("span"):
-                    return element.find_next("span").text.strip()
-                # Tenta extrair data com regex
-                date_match = re.search(r'\d{2}/\d{2}/\d{4}', element.text)
-                if date_match:
-                    return date_match.group()
-        return "N/A"
-    
-    def _extract_case_class(self, container) -> str:
-        """Extrai a classe processual."""
-        # Procura link de acompanhamento processual
+
+    def _extract_case_class(self, container: Any, case_title: str) -> str:
         links = container.find_all("a")
         for link in links:
-            if 'href' in link.attrs and "classe=" in link['href']:
-                parsed_url = urlparse(link['href'])
-                query_params = parse_qs(parsed_url.query)
-                if 'classe' in query_params:
-                    return query_params['classe'][0]
-        
-        # Tenta extrair do título
-        title = self._extract_case_title(container)
-        if title and " " in title:
-            return title.split()[0]
-        
-        return "N/A"
-    
-    def _extract_case_number(self, container) -> str:
-        """Extrai o número do processo."""
+            href = link.get("href")
+            if href and "classe=" in href:
+                m = re.search(r"classe=([^&]+)", href)
+                if m:
+                    return m.group(1)
+        d = derive_case_class_detail(case_title)
+        return d or "N/A"
+
+    def _extract_case_number(self, container: Any, case_title: str) -> str:
         links = container.find_all("a")
         for link in links:
-            if 'href' in link.attrs and "numeroProcesso=" in link['href']:
-                parsed_url = urlparse(link['href'])
-                query_params = parse_qs(parsed_url.query)
-                if 'numeroProcesso' in query_params:
-                    return query_params['numeroProcesso'][0]
-        
-        # Tenta extrair do título
-        title = self._extract_case_title(container)
-        if title:
-            # Procura por números no título
-            numbers = re.findall(r'\d+', title)
-            if numbers:
-                return numbers[-1]
-        
-        return "N/A"
-    
-    def _extract_full_text_occurrences(self, container) -> int:
-        """Extrai o número de ocorrências de 'Inteiro teor'."""
-        # Procura por texto "Inteiro teor"
-        elements = container.find_all(text=re.compile(r'Inteiro teor', re.IGNORECASE))
-        for element in elements:
-            parent = element.parent
-            if parent:
-                # Procura por número entre parênteses
-                text = parent.text if hasattr(parent, 'text') else str(parent)
-                match = re.search(r'\((\d+)\)', text)
-                if match:
-                    return int(match.group(1))
-        
+            href = link.get("href")
+            if href and "numeroProcesso=" in href:
+                m = re.search(r"numeroProcesso=([^&]+)", href)
+                if m:
+                    return m.group(1)
+        d = derive_case_number_detail(case_title)
+        return d or "N/A"
+
+    def _extract_occurrences(self, container: Any, label: str) -> int:
+        texts = container.find_all(string=re.compile(label, re.IGNORECASE))
+        for t in texts:
+            parent = getattr(t, "parent", None)
+            if parent is not None:
+                txt = parent.get_text(" ", strip=True)
+                m = re.search(r"\((\d+)\)", txt)
+                if m:
+                    try:
+                        return int(m.group(1))
+                    except Exception:
+                        return 0
         return 0
-    
-    def _extract_indexing_occurrences(self, container) -> int:
-        """Extrai o número de ocorrências de indexação."""
-        # Similar à extração de inteiro teor, mas para "Indexação"
-        elements = container.find_all(text=re.compile(r'Indexação', re.IGNORECASE))
-        for element in elements:
-            parent = element.parent
-            if parent:
-                text = parent.text if hasattr(parent, 'text') else str(parent)
-                match = re.search(r'\((\d+)\)', text)
-                if match:
-                    return int(match.group(1))
-        
-        return 0
-    
-    def _extract_dom_result_container_id(self, container) -> str:
-        """Extrai o ID DOM do container de resultado."""
-        if 'id' in container.attrs:
-            return container['id']
-        
-        # Procura por ID nos elementos pais
-        parent = container.parent
-        while parent and parent.name != 'body':
-            if 'id' in parent.attrs:
-                return parent['id']
-            parent = parent.parent
-        
-        return "N/A"
-    
-    def _extract_dom_clipboard_id(self, container) -> str:
-        """Extrai o ID DOM do clipboard."""
-        # Procura botão com tooltip relacionado a copiar
+
+    def _extract_dom_clipboard_id(self, container: Any) -> Optional[str]:
         buttons = container.find_all("button")
-        for button in buttons:
-            if 'mattooltip' in button.attrs and any(word in button['mattooltip'].lower() 
-                                                   for word in ['copiar', 'copy', 'link']):
-                if 'id' in button.attrs:
-                    return button['id']
-        
-        return "N/A"
-    def claim_next_raw_html(self) -> Optional[Dict]:
-        """
-        Claim atômico do próximo raw_html com status=new.
-        Troca new -> extracting na mesma operação (evita 2 workers pegarem o mesmo doc).
-        """
+        for b in buttons:
+            tip = b.get("mattooltip", "")
+            if isinstance(tip, str) and any(w in tip.lower() for w in ["copiar", "copy", "link"]):
+                if b.get("id"):
+                    return b["id"]
+        return None
+
+
+# ------------------------------------------------------------
+# Estrutura destino (case_data) - AJUSTADA para o documento atualizado
+# ------------------------------------------------------------
+def build_case_data_document(
+    *,
+    extracted: Dict[str, Any],
+    raw_doc: Dict[str, Any],
+    pipeline_status: str,
+) -> Dict[str, Any]:
+    """
+    Gera documento compatível com a estrutura atualizada:
+
+    - caseTitle (top-level)
+    - identity/{caseCode,caseClassDetail,caseNumberDetail,caseDecisionType,stfDecisionId,rawHtmlId}
+    - dates/{judgmentDate,publicationDate}
+    - query/{queryString,pageSize,inteiroTeor}
+    - caseContent/{rawHtml,sanitizedHtml,caseUrl}
+    - stfCard/{... occurrences/{fullText,indexing} ...}
+    - audit/{extractionDate,lastExtractedAt,builtAt,updatedAt,sourceStatus,pipelineStatus}
+
+    Regra: se o dado não existe (None/"N/A"/vazio/0 para ocorrências), o campo não é criado.
+    """
+    now = utc_now()
+
+    raw_id = raw_doc.get("_id")
+    raw_id_str = str_objectid(raw_id)
+
+    # ---- base values (extraídos)
+    stf_id = _clean_str(extracted.get("stfDecisionId"))
+    case_title = _clean_str(extracted.get("caseTitle"))
+    case_url = _clean_str(extracted.get("caseUrl"))
+
+    case_class_detail = derive_case_class_detail(case_title or "") if case_title else None
+    case_number_detail = derive_case_number_detail(case_title or "") if case_title else None
+    case_code = case_title  # conforme definido: "código derivado do título"
+
+    judgment_date = _clean_str(extracted.get("judgmentDate"))
+    publication_date = _clean_str(extracted.get("publicationDate"))
+
+    # query/ vem do raw_doc
+    query_sub = build_query_from_raw(raw_doc)
+
+    # occurrences (só cria se > 0)
+    full_text_occ = extracted.get("fullTextOccurrences")
+    indexing_occ = extracted.get("indexingOccurrences")
+    occ_sub: Dict[str, Any] = {}
+    if isinstance(full_text_occ, int) and full_text_occ > 0:
+        occ_sub["fullText"] = full_text_occ
+    if isinstance(indexing_occ, int) and indexing_occ > 0:
+        occ_sub["indexing"] = indexing_occ
+
+    # stfCard/
+    stf_card: Dict[str, Any] = {}
+    _set_if(stf_card, "localIndex", extracted.get("localIndex"))
+    _set_if(stf_card, "caseTitle", case_title)
+    _set_if(stf_card, "caseUrl", case_url)
+    _set_if(stf_card, "caseClass", _clean_str(extracted.get("caseClass")))
+    _set_if(stf_card, "caseNumber", _clean_str(extracted.get("caseNumber")))
+    _set_if(stf_card, "judgingBody", _clean_str(extracted.get("judgingBody")))
+    _set_if(stf_card, "rapporteur", _clean_str(extracted.get("rapporteur")))
+    _set_if(stf_card, "opinionWriter", _clean_str(extracted.get("opinionWriter")))
+    _set_if(stf_card, "judgmentDate", judgment_date)
+    _set_if(stf_card, "publicationDate", publication_date)
+    _set_if(stf_card, "occurrences", occ_sub or None)
+    _set_if(stf_card, "domResultContainerId", _clean_str(extracted.get("domResultContainerId")))
+    _set_if(stf_card, "domClipboardId", _clean_str(extracted.get("domClipboardId")))
+
+    # identity/
+    identity = _subdoc_if_any(
+        [
+            ("caseCode", case_code),
+            ("caseClassDetail", case_class_detail),
+            ("caseNumberDetail", case_number_detail),
+            # caseDecisionType: "a preencher" -> não cria
+            ("stfDecisionId", stf_id),
+            ("rawHtmlId", raw_id_str if raw_id_str else None),
+        ]
+    )
+
+    # dates/
+    dates = _subdoc_if_any(
+        [
+            ("judgmentDate", judgment_date),
+            ("publicationDate", publication_date),
+        ]
+    )
+
+    # caseContent/
+    # Regra pedida: se dado não está disponível na fonte, não cria.
+    # rawHtml e sanitizedHtml não são fornecidos pelo card: não cria aqui.
+    case_content = _subdoc_if_any(
+        [
+            ("caseUrl", case_url),
+        ]
+    )
+
+    # audit/
+    audit: Dict[str, Any] = {}
+    _set_if(audit, "extractionDate", now)
+    _set_if(audit, "lastExtractedAt", now)
+    _set_if(audit, "builtAt", now)
+    _set_if(audit, "updatedAt", now)
+    _set_if(audit, "sourceStatus", "extracted")
+    _set_if(audit, "pipelineStatus", pipeline_status)
+
+    doc: Dict[str, Any] = {}
+    _set_if(doc, "caseTitle", case_title)
+    _set_if(doc, "identity", identity)
+    _set_if(doc, "dates", dates)
+    _set_if(doc, "query", query_sub or None)
+    _set_if(doc, "caseContent", case_content)
+    _set_if(doc, "stfCard", stf_card or None)
+    _set_if(doc, "audit", audit or None)
+
+    return doc
+
+
+# ------------------------------------------------------------
+# Modo de execução
+# ------------------------------------------------------------
+@dataclass(frozen=True)
+class RunPlan:
+    option: int
+    label: str
+    process_only_new_raw: bool
+    update_only_existing_decisions: bool
+    upsert: bool
+
+
+PLANS: Dict[int, RunPlan] = {
+    1: RunPlan(1, "Processar apenas os registros novos", True,  False, True),
+    2: RunPlan(2, "Atualizar registros existentes",        False, True,  False),
+    3: RunPlan(3, "Processar todos (sobreescrevendo os existentes)", False, False, True),
+}
+
+
+def choose_action() -> int:
+    print("\nEscolha a ação:")
+    print("1 - Processar apenas os registros novos")
+    print("2 - Atualizar registros existentes")
+    print("3 - Processar todos (sobreescrevendo os existentes)")
+    print("4 - Abortar")
+    while True:
+        s = input("Opção: ").strip()
+        if s in {"1", "2", "3", "4"}:
+            return int(s)
+        print("Opção inválida. Digite 1, 2, 3 ou 4.")
+
+
+# ------------------------------------------------------------
+# Totalizadores (origem vs destino)
+# ------------------------------------------------------------
+def get_processed_raw_ids(dest_col: Collection) -> Set[str]:
+    """
+    No modelo novo: identity.rawHtmlId é string.
+    """
+    ids = dest_col.distinct("identity.rawHtmlId")
+    return {str(v) for v in ids if v is not None}
+
+
+def list_source_ids(source_col: Collection) -> List[ObjectId]:
+    return [d["_id"] for d in source_col.find({}, projection={"_id": 1}).sort([("_id", 1)])]
+
+
+def count_source_total(source_col: Collection) -> int:
+    return source_col.count_documents({})
+
+
+def count_source_unprocessed(source_ids: List[ObjectId], processed_ids: Set[str]) -> int:
+    return sum(1 for _id in source_ids if str_objectid(_id) not in processed_ids)
+
+
+# ------------------------------------------------------------
+# Claim/finalização raw_html (se houver status)
+# ------------------------------------------------------------
+def claim_raw_doc(source_col: Collection, raw_id: ObjectId) -> Optional[Dict[str, Any]]:
+    raw = source_col.find_one({"_id": raw_id})
+    if not raw:
+        return None
+    if "status" in raw:
+        return source_col.find_one_and_update(
+            {"_id": raw_id, "status": {"$ne": "extracting"}},
+            {"$set": {"status": "extracting", "extractingAt": iso_now()}},
+            return_document=ReturnDocument.AFTER,
+        )
+    return raw
+
+
+def finalize_raw_status(source_col: Collection, raw_id: ObjectId, status: str, extra: Optional[Dict[str, Any]] = None) -> None:
+    upd: Dict[str, Any] = {"status": status, "processedDate": iso_now()}
+    if extra:
+        upd.update(extra)
+    try:
+        source_col.update_one({"_id": raw_id}, {"$set": upd})
+    except Exception:
+        pass
+
+
+# ------------------------------------------------------------
+# Persistência em case_data (compatível com o documento atualizado)
+# ------------------------------------------------------------
+def upsert_case_data(
+    *,
+    dest_col: Collection,
+    doc: Dict[str, Any],
+    plan: RunPlan,
+) -> Tuple[str, str]:
+    """
+    Retorna (dest_id_str, action_str):
+    - inserted | updated | skipped
+    """
+    identity = doc.get("identity") if isinstance(doc.get("identity"), dict) else {}
+    stf_id = _clean_str(identity.get("stfDecisionId"))
+    if not stf_id:
+        return ("", "skipped")
+
+    flt = {"identity.stfDecisionId": stf_id}
+
+    # Se for "atualizar existentes", só atualiza se já existir
+    if plan.update_only_existing_decisions:
+        existing = dest_col.find_one(flt, projection={"_id": 1})
+        if not existing:
+            return ("", "skipped")
+
+    now = utc_now()
+
+    # Atualiza somente subpaths de audit para evitar conflitos.
+    doc_no_audit = dict(doc)
+    doc_no_audit.pop("audit", None)
+
+    update_doc = {
+        "$set": {
+            **doc_no_audit,
+            "audit.updatedAt": now,
+            "audit.lastExtractedAt": now,
+        },
+        "$setOnInsert": {
+            "audit.builtAt": now,
+            "audit.extractionDate": now,
+            "audit.sourceStatus": "extracted",
+        },
+    }
+
+    result = dest_col.update_one(flt, update_doc, upsert=plan.upsert)
+
+    if result.upserted_id is not None:
+        return (str_objectid(result.upserted_id), "inserted")
+
+    got = dest_col.find_one(flt, projection={"_id": 1})
+    if got:
+        return (str_objectid(got["_id"]), "updated")
+
+    return ("", "skipped")
+
+
+# ------------------------------------------------------------
+# MAIN
+# ------------------------------------------------------------
+def main() -> None:
+    client = get_db_client()
+    source_col, dest_col = get_collections(client)
+
+    total_source = count_source_total(source_col)
+    source_ids = list_source_ids(source_col)
+    processed_raw_ids = get_processed_raw_ids(dest_col)
+    total_unprocessed = count_source_unprocessed(source_ids, processed_raw_ids)
+
+    print("============================================================")
+    print("TOTALIZADORES")
+    print("------------------------------------------------------------")
+    print(f"Collection origem ({SOURCE_COLLECTION}) total                  : {total_source}")
+    print(f"Collection origem NÃO processados/inseridos em {DEST_COLLECTION}: {total_unprocessed}")
+    print("============================================================")
+
+    choice = choose_action()
+    if choice == 4:
+        print("Abortado.")
+        return
+
+    plan = PLANS[choice]
+    print(f"\nAção selecionada: {plan.option} - {plan.label}\n")
+
+    # Seleciona quais raw_html serão processados
+    if plan.process_only_new_raw:
+        selected_ids = [rid for rid in source_ids if str_objectid(rid) not in processed_raw_ids]
+    elif plan.update_only_existing_decisions:
+        selected_ids = [rid for rid in source_ids if str_objectid(rid) in processed_raw_ids]
+    else:
+        selected_ids = list(source_ids)
+
+    if not selected_ids:
+        print("Nenhum registro elegível para a ação selecionada.")
+        return
+
+    extractor = STFListExtractor()
+
+    total_new = 0
+    total_updated = 0
+    total_skipped = 0
+    total_errors = 0
+
+    for raw_id in selected_ids:
+        print("-----")
+        print(f"Processando registro {raw_id}")
+
+        raw_doc = claim_raw_doc(source_col, raw_id)
+        if not raw_doc:
+            print("Erro: documento não encontrado.")
+            total_errors += 1
+            continue
+
+        html = extract_html_from_raw_doc(raw_doc)
+        if not html:
+            print("Erro: HTML vazio (campo htmlRaw/payload.htmlRaw não encontrado).")
+            finalize_raw_status(source_col, raw_id, "error", {"error": "Sem conteúdo HTML"})
+            total_errors += 1
+            continue
+
         try:
-            now = datetime.now().isoformat()
-            return self.raw_html_collection.find_one_and_update(
-                {"status": "new"},
-                {"$set": {"status": "extracting", "extractingAt": now}},
-                sort=[("_id", 1)],
-                return_document=ReturnDocument.AFTER,
-            )
-        except Exception as e:
-            print(f"Erro ao buscar/claim documento: {e}")
-            return None
+            decisions = extractor.extract_decisions(html, raw_id)
+            print("Extração finalizada")
 
-    # def get_next_raw_html(self) -> Optional[Dict]:
-    #     """
-    #     Obtém o próximo documento raw_html com status "new" mais antigo.
-        
-    #     Returns:
-    #         dict: Documento do MongoDB ou None se não houver documentos
-    #     """
-    #     try:
-    #         query = {"status": "new"}
-    #         # Ordena por data de criação mais antiga primeiro
-    #         sort = [("_id", 1)]
-    #         return self.raw_html_collection.find_one(query, sort=sort)
+            if not decisions:
+                finalize_raw_status(source_col, raw_id, "empty", {"extractedCount": 0})
+                print("Nenhuma decisão encontrada no HTML.")
+                continue
 
-    #     except Exception as e:
-    #         print(f"Erro ao buscar documento: {e}")
-    #         return None
-        
-    def save_extracted_data(self, extracted_data: List[Dict[str, Any]]) -> bool:
-        """
-        Salva os dados extraídos na collection case_data usando UPSERT por stfDecisionId.
-        
-        Regras:
-        - Se já existir documento com o mesmo stfDecisionId: atualiza campos ($set)
-        - Se não existir: insere novo documento ($setOnInsert) + $set
-        
-        Returns:
-            bool: True se salvou com sucesso, False caso contrário
-        """
-        try:
-            if not extracted_data:
-                print("Nenhum dado para salvar.")
-                return False
-
+            affected_ids: List[str] = []
             inserted = 0
             updated = 0
             skipped = 0
 
-            for item in extracted_data:
-                stf_id = item.get("stfDecisionId")
-                if not stf_id or stf_id == "N/A":
-                    skipped += 1
-                    continue
-
-                now = datetime.now().isoformat()
-
-                # Campos que sempre atualizam (extraídos do HTML)
-                set_fields = dict(item)
-                set_fields["lastExtractedAt"] = now
-                # Opcional: mantém a data original de extração também
-                # set_fields["extractionDate"] = now  # (se você quiser sobrescrever sempre)
-
-                # Campos apenas na criação do documento
-                set_on_insert_fields = {
-                    "createdAt": now,
-                }
-
-                result = self.case_data_collection.update_one(
-                    {"stfDecisionId": stf_id},
-                    {
-                        "$set": set_fields,
-                        "$setOnInsert": set_on_insert_fields,
-                    },
-                    upsert=True,
+            for d in decisions:
+                structured = build_case_data_document(
+                    extracted=d,
+                    raw_doc=raw_doc,
+                    pipeline_status="listExtracted",
                 )
 
-                # Métricas:
-                if result.upserted_id is not None:
+                dest_id, action = upsert_case_data(dest_col=dest_col, doc=structured, plan=plan)
+
+                if action == "inserted":
                     inserted += 1
-                elif result.modified_count > 0:
+                    if dest_id:
+                        affected_ids.append(dest_id)
+                elif action == "updated":
                     updated += 1
+                    if dest_id:
+                        affected_ids.append(dest_id)
+                else:
+                    skipped += 1
 
-            print(
-                "Persistência concluída em case_data: "
-                f"{inserted} inseridos, {updated} atualizados, {skipped} ignorados (stfDecisionId inválido)."
-            )
-            return True
+            finalize_raw_status(source_col, raw_id, "extracted", {"extractedCount": len(decisions)})
+
+            print(f"Id(s) gravados/atualizados em {DEST_COLLECTION}: {', '.join(affected_ids) or 'N/A'}")
+
+            total_new += inserted
+            total_updated += updated
+            total_skipped += skipped
 
         except Exception as e:
-            print(f"Erro ao salvar dados (upsert): {e}")
-            return False
+            print(f"Erro na extração/persistência: {e}")
+            finalize_raw_status(source_col, raw_id, "error", {"error": str(e)})
+            total_errors += 1
+            continue
 
-    
-    def update_raw_html_status(self, doc_id: ObjectId) -> bool:
-        """
-        Atualiza o status do documento raw_html para "extracted".
-        
-        Args:
-            doc_id (ObjectId): ID do documento a ser atualizado
-            
-        Returns:
-            bool: True se atualizou com sucesso, False caso contrário
-        """
-        try:
-            result = self.raw_html_collection.update_one(
-                {"_id": doc_id, "status": "extracting"},
-                {"$set": {
-                    "status": "extracted",
-                    "processedDate": datetime.now().isoformat(),
-                    "extractedCount": self.case_data_collection.count_documents({"sourceDocumentId": str(doc_id)}),
-                }}
-            )
-            
-            if result.modified_count > 0:
-                print(f"Status do documento {doc_id} atualizado para 'extracted'.")
-                return True
-            else:
-                print(f"Documento {doc_id} não encontrado ou já processado.")
-                return False
-        except Exception as e:
-            print(f"Erro ao atualizar status: {e}")
-            return False
-    
-    def count_new_documents(self) -> int:
-        """Conta quantos documentos com status 'new' existem."""
-        try:
-            return self.raw_html_collection.count_documents({"status": "new"})
-        except Exception as e:
-            print(f"Erro ao contar documentos: {e}")
-            return 0
-    
-    def process_single_document(self) -> bool:
-        """
-        Processa um único documento raw_html.
-        
-        Returns:
-            bool: True se processou com sucesso, False caso contrário
-        """
-        print("\n" + "="*60)
-        print("Buscando próximo documento para processamento...")
-        
-        # # 1. Obter o próximo documento raw_html
-        # raw_doc = self.get_next_raw_html()
-        raw_doc = self.claim_next_raw_html()
-
-        if not raw_doc:
-            print("Nenhum documento com status 'new' encontrado.")
-            return False
-        
-        doc_id = raw_doc["_id"]
-        html_content = raw_doc.get("htmlRaw", "")
-        
-        print(f"Documento encontrado: {doc_id}")
-        print(f"Título do documento: {raw_doc.get('title', 'Sem título')}")
-        
-        if not html_content:
-            print(f"Documento {doc_id} não possui conteúdo HTML.")
-            # Marca como erro
-            self.raw_html_collection.update_one(
-                {"_id": doc_id},
-                {"$set": {"status": "error", 
-                         "error": "Sem conteúdo HTML",
-                         "processedDate": datetime.now().isoformat()}}
-            )
-            return False
-        
-        print(f"Processando {len(html_content)} caracteres de HTML...")
-        
-        # 2. Extrair dados do HTML
-        try:
-            extracted_data = self.extract_single_document(html_content, str(doc_id))
-        except Exception as e:
-            print(f"Erro na extração de dados: {e}")
-            # Marca como erro
-            self.raw_html_collection.update_one(
-                {"_id": doc_id},
-                {"$set": {"status": "error", 
-                         "error": str(e),
-                         "processedDate": datetime.now().isoformat()}}
-            )
-            return False
-        
-        if not extracted_data:
-            print("Nenhum dado extraído do HTML.")
-            # Marca como vazio
-            self.raw_html_collection.update_one(
-                {"_id": doc_id},
-                {"$set": {"status": "empty", 
-                         "processedDate": datetime.now().isoformat()}}
-            )
-            return True
-        
-        print(f"Extraídos {len(extracted_data)} registros de decisão.")
-        
-        # 3. Salvar dados extraídos na collection case_data
-        save_success = self.save_extracted_data(extracted_data)
-        
-        if not save_success:
-            print("Falha ao salvar dados extraídos.")
-            # Marca como erro
-            self.raw_html_collection.update_one(
-                {"_id": doc_id},
-                {"$set": {"status": "error", 
-                         "error": "Falha ao salvar dados extraídos",
-                         "processedDate": datetime.now().isoformat()}}
-            )
-            return False
-        
-        # 4. Atualizar status do documento raw_html
-        update_success = self.update_raw_html_status(doc_id)
-        
-        if not update_success:
-            print("Falha ao atualizar status do documento.")
-            return False
-        
-        print(f"Processamento do documento {doc_id} concluído com sucesso!")
-        return True
-    
-    def close(self):
-        """Fecha a conexão com o MongoDB."""
-        self.client.close()
-
-
-def main():
-    """
-    Função principal para executar o processo de extração.
-    """
-    # Configuração da conexão com MongoDB
-    DB_USERNAME = "cito"
-    DB_PASSWORD = "fyu9WxkHakGKHeoq"
-    DB_NAME = "cito-v-a33-240125"
-    
-    # Construir URI de conexão
-    MONGO_URI = f"mongodb+srv://{DB_USERNAME}:{DB_PASSWORD}@cluster0.gb8bzlp.mongodb.net/?appName=Cluster0"
-    
-    print("="*60)
-    print("INICIANDO PROCESSO DE EXTRAÇÃO DE DADOS DO STF")
-    print("="*60)
-    print(f"Conectando ao banco de dados: {DB_NAME}")
-    print(f"Collection origem: raw_html")
-    print(f"Collection destino: case_data")
-    print("="*60)
-    
-    try:
-        # Inicializar extrator
-        extractor = STFExtractor(MONGO_URI, DB_NAME)
-        
-        # Verificar quantos documentos novos existem
-        new_docs_count = extractor.count_new_documents()
-        print(f"\nDocumentos pendentes (status='new'): {new_docs_count}")
-        
-        if new_docs_count == 0:
-            print("Nenhum documento para processar. Encerrando.")
-            extractor.close()
-            return
-        
-        # Processar documentos enquanto houver novos
-        processed_count = 0
-        max_documents = min(new_docs_count, 50)  # Limite de segurança
-        
-        print(f"\nProcessando até {max_documents} documentos...")
-        
-        while processed_count < max_documents:
-            success = extractor.process_single_document()
-            
-            if not success:
-                print("Nenhum documento para processar ou erro no processamento.")
-                break
-            
-            processed_count += 1
-            
-            # Atualizar contagem de documentos restantes
-            remaining = extractor.count_new_documents()
-            print(f"\nProgresso: {processed_count}/{max_documents} processados")
-            print(f"Documentos restantes: {remaining}")
-            
-            if remaining == 0:
-                print("Todos os documentos foram processados!")
-                break
-        
-        print("\n" + "="*60)
-        print(f"PROCESSAMENTO CONCLUÍDO")
-        print(f"Total de documentos processados: {processed_count}")
-        print("="*60)
-        
-        # Fechar conexão
-        extractor.close()
-        
-    except pymongo.errors.ConnectionFailure as e:
-        print(f"ERRO DE CONEXÃO: Não foi possível conectar ao MongoDB: {e}")
-        print("Verifique as credenciais e a conexão com a internet.")
-    except Exception as e:
-        print(f"ERRO NO PROCESSAMENTO: {e}")
-        import traceback
-        traceback.print_exc()
-        raise
+    print("\n============================================================")
+    print("RESUMO FINAL")
+    print("------------------------------------------------------------")
+    print(f"Total de registros novos       : {total_new}")
+    print(f"Total de registros atualizados : {total_updated}")
+    print(f"Total de registros ignorados   : {total_skipped}")
+    print(f"Total de erros                 : {total_errors}")
+    print("============================================================")
 
 
 if __name__ == "__main__":
-    # Instalar dependências se necessário
     try:
-        import pymongo
-        import bs4
-    except ImportError:
-        print("Instalando dependências necessárias...")
-        import subprocess
-        import sys
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "pymongo", "beautifulsoup4"])
-        print("Dependências instaladas com sucesso!")
-    
-    main()
+        main()
+    except PyMongoError as e:
+        print(f"[ERRO] MongoDB: {e}")
+        raise
