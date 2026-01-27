@@ -390,4 +390,224 @@ Gravar markdown:                OK
 
 PROCESSAMENTO ITEM FINALIZADO
 
-# MINERAR DADOS caseContent.
+
+
+# MINERAR DADOS caseContent
+
+Obtenha o conteúdo do campo 'caseContent.contentMd' identifique no conteúdo os seguintes títulos (identificados com ####) e extraia todo o conteúdo existente.
+
+
+- Publicação
+- Partes
+    - Extrair individualmente cada linha.
+    - Identificar o tipo da parte REQTE.(S), ADV.(A/S), PROC.(A/S)(ES) etc. É a informação existente antes do ':'.
+    - Identificar o nome da parte. Dado após o ':'. 
+- Ementa
+- Decisão
+- Indexação
+    - Identificar cada palavra-chave existente nessa seção, elas são separadas por vírgula.
+    - Cada palavra deve ser salva como um novo item dentro do item 'indexação'
+- Legislação
+- Observação
+- Doutrina
+
+Utilize a seguinte regra de estrutura e nomenclatura de dados:
+
+Título/seção - Nome do campo na no documento na collection "case_data"
+
+Publicação	caseData.casePublication - 
+Partes	    caseData.caseParties -deve ser inserido um item chamado 'partieName', com o respectivo atributo do tipo da parte.
+Ementa	    caseData.caseSummary - 
+Decisão	    caseData.caseDecision    - 
+Indexação	caseData.caseKeywords    - ada palavra-chave identificada deverá ser um item individual.
+Legislação	caseData.caseLegislation - 
+Observação	caseData.caseNotes   - 
+Doutrina	caseData.caseDoctrine    - 
+
+
+Caso exista algum título não identificado acima, o mesmo deve ser inserido com seu próprio nome.
+
+
+# MINERAR COM IA - DOUTRINA
+
+Utilizar modelo de IA Mistral via api, para analisar o conteúdo obtido do banco de dados collection 'case_data' campo caseData.caseDoctrine, identificar, extraír e organizar as referencias.
+
+- 
+- Identificar cada citação individual (normalmente deparadas por vírgula)
+- Identificar e extrair detalhes de cada citação:
+    - Nome e sobrenome do autor 
+    - Nome do documento, publicação, livro obra, peça ou referência citada
+    - Edição
+    - Local de publicação
+    - Editora
+    - Ano
+    - Página citada
+- EXEMPLO:
+    - citação identificada: BARROSO, Luís Roberto. O controle de constitucionalidade no direito brasileiro: exposição sistemática da doutrina e análise crítica da jurisprudência. 4. ed. São Paulo: Saraiva, 2009. p. 181.
+    - dados extraídos
+        - autor: BARROSO, Luís Roberto
+        - publicação: O controle de constitucionalidade no direito brasileiro: exposição sistemática da doutrina e análise crítica da jurisprudência.
+        - edição: 4 ed
+        - Local publicação: São paulo
+        - Ano: 2009
+        - Página: 181
+
+Exemplo do conteúdo que deve ser analizado:
+#### Doutrina
+
+ALEXY, Robert. Teoria dos direitos fundamentais. 2. ed. Trad. Virgílio Afonso da Silva. São Paulo: Malheiros, 2015, p. 582.
+CANOTILHO, José Joaquim Gomes. Direito constitucional . 6. ed. Coimbra: Almedina, 1993, p. 139.
+MENDES, Gilmar Ferreira; BRANCO, Paulo Gustavo Gonet. Curso de direito constitucional. 17. ed. São Paulo: SaraivaJur, 2022, p. 233-234 e 1.561. FORSTHOFF, Ernst. Lo Stato della società industriale. Ed. de Alessandro Mangia. Milão: Ed. Giuffrè, 2011, p. 161.
+LIMA, Tulius Marcus Fiuza. Direito à licença maternidade para casais homoafetivos femininos. p. 473-489. In: Direito Econômico e Desenvolvimento. Entre a prática e a academia. Coordenador. Cláudio Xavier Seefelder Filho. Belo Horizonte: Forum. 2023.
+ZAGREBELSKY, Gustavo; MARCENÒ, Valeria. Giustizia Costituzionale. Bolonha: il Mulino, 2012, p. 337-420.
+
+
+
+
+adicione ao script, mais uma funcionalidade após as existentes, para que ele obtenha o conteúdo de caseData.caseLegislation, analise e identifique individualmente cada uma das citações de legislação.
+
+Formato: As citações seguem um padrão estruturado com prefixos:
+
+LEG-FED → Legislação Federal
+
+LEG-EST → Legislação Estadual
+
+CF → Constituição Federal
+
+EMC → Emenda Constitucional
+
+ART → Artigo
+
+INC → Inciso
+
+PAR → Parágrafo
+
+LET → Letra
+
+Separadores: As citações são identificáveis por:
+
+Quebras de linha (principal)
+
+Espaços entre referências diferentes
+
+Mudança de tipo de norma (ex: de ART para INC)
+
+Citações compostas: Algumas linhas contêm múltiplas referências, mas devem ser tratadas como citações individuais (ex: "INC-00047 LET-E" é uma única referência a um inciso e sua letra específica).
+
+Normas principais: Além das citações específicas, o texto referencia normas completas:
+
+CONSTITUIÇÃO FEDERAL (CF-1988)
+
+EMC-000229/2019
+
+LEI-008112/1990 (RJU)
+
+LEI-011770/2008
+
+LEI-014457/2022
+
+DEC-006690/2008
+
+PJL-000139/2022
+
+LCP-000046/1994 (ES)
+
+LCP-000855/2017 (ES)
+
+
+As informações deverão ser salvas em caseData.caseLegislationReferences de forma estruturada.
+ # 
+
+---
+Utilizando o código dos seguintes scripts: b_search_save_html-old.py 
+#
+
+
+{
+  "_id": "65f0c9f0e1b2c3d4e5f67890",
+  "caseStfId": "sjur12345",
+  "caseIdentification": {
+    "caseTitle": "ADI 7518 / ES - ESPÍRITO SANTO",
+    "caseClassDetail": "ADI",
+    "caseCode": "7518",
+    "judgingBody": "Tribunal Pleno",
+    "rapporteur": "Min. Gilmar Mendes",
+    "caseUrl": "https://jurisprudencia.stf.jus.br/..."
+  },
+  "dates": {
+    "judgmentDate": "16/09/2024",
+    "publicationDate": "02/10/2024"
+  },
+  "caseContent": {
+    "caseHtml": "<html>...</html>",
+    "caseHtmlClean": "<div class=\"mat-tab-body-wrapper\">...</div>",
+    "caseMarkdown": "#### Publicação\n..."
+  },
+  "rawData": {
+    "rawPublication": "PROCESSO ELETRÔNICO\nDJe-s/n DIVULG 01-10-2024 PUBLIC 02-10-2024",
+    "rawParties": "REQTE.(S): PROCURADORA-GERAL DA REPÚBLICA\nINTDO.(A/S): GOVERNADOR DO ESTADO DO ESPÍRITO SANTO",
+    "rawSummary": "Ação direta de inconstitucionalidade. 2. Licença-parental...",
+    "rawDecision": "Decisão ...",
+    "rawKeywords": "NECESSIDADE, EXTINÇÃO, TRIBUNAL DO JÚRI, ...",
+    "rawLegislation": "LEI-008112/1990 (RJU) ...",
+    "rawNotes": "Observação ...",
+    "rawDoctrine": "BARROSO, Luís Roberto..."
+  },
+  "caseData": {
+    "caseParties": [
+      { "partieType": "REQTE.(S)", "partieName": "PROCURADORA-GERAL DA REPÚBLICA" },
+      { "partieType": "INTDO.(A/S)", "partieName": "GOVERNADOR DO ESTADO DO ESPÍRITO SANTO" }
+    ],
+    "caseKeywords": [
+      "licença parental",
+      "servidor público",
+      "constitucionalidade"
+    ],
+    "caseDoctrineReferences": [
+      {
+        "author": "BARROSO, Luís Roberto",
+        "publicationTitle": "O controle de constitucionalidade no direito brasileiro: exposição sistemática da doutrina e análise crítica da jurisprudência",
+        "edition": "4 ed",
+        "publicationPlace": "São Paulo",
+        "publisher": "Saraiva",
+        "year": 2009,
+        "page": "181",
+        "rawCitation": "BARROSO, Luís Roberto. O controle de constitucionalidade... p. 181."
+      }
+    ],
+    "caseLegislationReferences": [
+      {
+        "jurisdictionLevel": "federal",
+        "normType": "CF",
+        "normIdentifier": "CF-1988",
+        "normYear": 1988,
+        "normDescription": "Constituição Federal",
+        "normReferences": [
+          {
+            "articleNumber": 5,
+            "isCaput": true,
+            "incisoNumber": 3,
+            "paragraphNumber": null,
+            "isParagraphSingle": false,
+            "letterCode": null
+          }
+        ]
+      }
+    ]
+  },
+  "processing": {
+    "pipelineStatus": "enriched",
+    "caseHtmlScrapedAt": "2026-01-26T22:10:00Z",
+    "caseContentMinedAt": "2026-01-26T22:35:00Z",
+    "caseDoctrineRefsAt": "2026-01-26T22:40:00Z",
+    "caseLegislationRefsAt": "2026-01-26T22:41:00Z",
+    "lastUpdatedAt": "2026-01-26T22:41:00Z",
+    "errors": []
+  },
+  "status": {
+    "pipelineStatus": "caseScraped"
+  },
+  "sourceIds": {
+    "rawHtmlId": "65f0c9f0e1b2c3d4e5f11111"
+  }
+}

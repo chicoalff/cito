@@ -238,7 +238,12 @@ def load_configs() -> AppConfig:
     log("INFO", "Iniciando (auth -> consulta -> normalize -> filter -> parse)")
     gc = build_gspread_client(SERVICE_ACCOUNT_FILE)
 
-    df = read_worksheet_as_df(gc, SPREADSHEET_URL, WORKSHEET_NAME)
+    try:
+        df = read_worksheet_as_df(gc, SPREADSHEET_URL, WORKSHEET_NAME)
+    except Exception as e:
+        # Fallback seguro quando credenciais estão inválidas/expiradas
+        log("ERROR", f"Falha ao ler Google Sheets: {e}")
+        return build_app_config({})
     if df.empty:
         log("WARN", "Sem dados na planilha")
         return build_app_config({})

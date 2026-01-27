@@ -1,0 +1,9 @@
+pandas
+gspread
+google-auth
+pymongo
+beautifulsoup4
+requests
+certifi
+markdownify
+playwright

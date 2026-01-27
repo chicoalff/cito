@@ -226,21 +226,51 @@ def calculate_size_kb(content: str) -> int:
     return ceil(len(content.encode("utf-8")) / 1024)
 
 
-def sanitize_and_convert_to_markdown(html: str) -> str:
-    """Sanitize HTML and convert it to Markdown."""
+def sanitize_html_keep_formatting(html: str) -> str:
+    """Sanitize HTML, keep only main content + formatting + links."""
     try:
         from bs4 import BeautifulSoup  # Optional but preferred for clean sanitization
         soup = BeautifulSoup(html, "html.parser")
         for tag in soup(["script", "style", "noscript", "iframe", "object", "embed"]):
             tag.decompose()
-        # Prefer body content if available
-        html = str(soup.body) if soup.body else str(soup)
+        # Keep only the STF decision tab content
+        content = soup.find("div", class_="mat-tab-body-wrapper")
+        if content is not None:
+            soup = BeautifulSoup(str(content), "html.parser")
+
+        # Remove all tags except formatting and links
+        allowed = {
+            "b", "strong", "i", "em", "u",
+            "p", "br",
+            "ul", "ol", "li",
+            "h1", "h2", "h3", "h4", "h5", "h6",
+            "a",
+            "blockquote",
+        }
+        for tag in list(soup.find_all(True)):
+            if tag.name not in allowed:
+                tag.unwrap()
+            elif tag.name != "a":
+                tag.attrs = {}
+            else:
+                # keep only href on links
+                href = tag.get("href")
+                tag.attrs = {}
+                if href:
+                    tag["href"] = href
+
+        html = str(soup)
     except Exception:
         # Fallback: remove script/style blocks via simple heuristics
         import re
 
         html = re.sub(r"<(script|style)[^>]*>.*?</\1>", "", html, flags=re.DOTALL | re.IGNORECASE)
 
+    return html.strip()
+
+
+def sanitize_and_convert_to_markdown(html: str) -> str:
+    """Convert sanitized HTML to Markdown."""
     return md(
         html,
         heading_style="ATX",
@@ -280,8 +310,18 @@ async def process_item(col: Collection, doc: Dict[str, Any], auto_confirm: bool)
         mark_success(col, doc_id, html=html)
         print("Gravar HTML original:           OK")
 
+        # Sanitize HTML (keep only main content + formatting)
+        sanitized_html = sanitize_html_keep_formatting(html)
+        sanitized_size_kb = calculate_size_kb(sanitized_html)
+        col.update_one(
+            {"_id": doc_id},
+            {"$set": {"caseContent.sanitizedHtml": sanitized_html}},
+        )
+        print(f"Tamanho html sanitizado:        {sanitized_size_kb} kb")
+        print("Gravar HTML sanitizado:         OK")
+
         # Convert to Markdown
-        markdown = sanitize_and_convert_to_markdown(html)
+        markdown = sanitize_and_convert_to_markdown(sanitized_html)
         print("Converter para Markdown:        OK")
         markdown_size_kb = calculate_size_kb(markdown)
         print(f"Tamanho markdown:               {markdown_size_kb} kb")
