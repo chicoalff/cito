@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-m_extract_doctrine_legislation_mistral.py
+m_extract_doctrine_legislation_groq.py
 
-Extrai:
-1) Doutrina (rawData.rawDoctrine) -> caseData.caseDoctrineReferences
-   - filtro: status.pipelineStatus == "enriched"
-2) Legislacao (rawData.rawLegislation) -> caseData.caseLegislationReferences
-   - filtro: status.pipelineStatus == "doctrineExtracted"
+Processa por processo:
+- Extrai doutrinas (rawData.rawDoctrine) -> caseData.caseDoctrineReferences
+- Extrai legislações (rawData.rawLegislation) -> caseData.caseLegislationReferences
 
-Dependencias:
-  pip install pymongo requests
+Filtro inicial: status.pipelineStatus == "enriched"
+
+Dependências:
+  pip install pymongo groq
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-import requests
+from groq import Groq
 from pymongo import MongoClient
 from pymongo.collection import Collection
 
@@ -36,91 +36,27 @@ MONGO_URI = f"mongodb+srv://{MONGO_USER}:{MONGO_PASS}@cluster0.gb8bzlp.mongodb.n
 DB_NAME = "cito-v-a33-240125"
 COLLECTION = "case_data"
 
-MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-MISTRAL_API_BASE = os.getenv("MISTRAL_API_BASE", "https://api.mistral.ai/v1")
-MISTRAL_MODEL = os.getenv("MISTRAL_MODEL", "mistral-large-latest")
-REQUEST_TIMEOUT = int(os.getenv("MISTRAL_TIMEOUT", "60"))
-RETRIES = int(os.getenv("MISTRAL_RETRIES", "3"))
+GROQ_API_KEY = "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"  # Substitua por variável de ambiente se preferir
+GROQ_MODEL = "llama-3.1-8b-instant"
+REQUEST_TIMEOUT = int(os.getenv("GROQ_TIMEOUT", "30"))
+RETRIES = int(os.getenv("GROQ_RETRIES", "3"))
 
 
-SYSTEM_PROMPT_DOCTRINE = """# SYSTEM PROMPT — Extração de Doutrina (Mistral, token-efficient)
+SYSTEM_PROMPT_DOCTRINE = """Act as a Portuguese legal reference extractor. Output ONLY valid JSON following this schema:
+{"caseData":{"caseDoctrineReferences":[{"author":str,"publicationTitle":str,"edition":str,"publicationPlace":str,"publisher":str,"year":int,"page":str,"rawCitation":str}]}}
 
-Você é um **extrator de referências doutrinárias jurídicas** em português (padrão ABNT aproximado).
-
-## Tarefa
-Identificar **cada citação individual** em um texto e extrair dados estruturados para `caseData.caseDoctrineReferences`.
-
-## Segmentação
-- Uma citação pode estar:
-  - em uma linha; ou
-  - colada a outra na mesma linha.
-- **Não use vírgulas** como separador de citações.
-- Nova citação normalmente inicia por `SOBRENOME, Nome.`.
-- Após `ano.` ou `p. ...`, se surgir novo padrão `SOBRENOME, Nome.`, iniciar nova citação.
-
-## Regras
-- Não inventar dados.
-- Campos ausentes → `null`.
-- `year`: inteiro (4 dígitos) ou `null`.
-- `edition`: normalizar para `"X ed"`.
-- `page`: string (ex.: `"181"`, `"233-234"`, `"233-234 e 1.561"`).
-- Múltiplos autores: usar **apenas o primeiro** em `author`.
-- `rawCitation`: citação completa, preservando o texto original.
-
-## Campos por item
-- `author`
-- `publicationTitle`
-- `edition`
-- `publicationPlace`
-- `publisher`
-- `year`
-- `page`
-- `rawCitation`
-
-## Exemplo de identificação (ilustrativo)
-
-### Entrada
-ALEXY, Robert. Teoria dos direitos fundamentais. 2. ed. Trad. Virgílio Afonso da Silva. São Paulo: Malheiros, 2015, p. 582.  
-CANOTILHO, José Joaquim Gomes. Direito constitucional. 6. ed. Coimbra: Almedina, 1993, p. 139.
-
-### Saída esperada (estrutura)
-{
-  "caseData": {
-    "caseDoctrineReferences": [
-      {
-        "author": "ALEXY, Robert",
-        "publicationTitle": "Teoria dos direitos fundamentais",
-        "edition": "2 ed",
-        "publicationPlace": "São Paulo",
-        "publisher": "Malheiros",
-        "year": 2015,
-        "page": "582",
-        "rawCitation": "ALEXY, Robert. Teoria dos direitos fundamentais. 2. ed. Trad. Virgílio Afonso da Silva. São Paulo: Malheiros, 2015, p. 582."
-      },
-      {
-        "author": "CANOTILHO, José Joaquim Gomes",
-        "publicationTitle": "Direito constitucional",
-        "edition": "6 ed",
-        "publicationPlace": "Coimbra",
-        "publisher": "Almedina",
-        "year": 1993,
-        "page": "139",
-        "rawCitation": "CANOTILHO, José Joaquim Gomes. Direito constitucional. 6. ed. Coimbra: Almedina, 1993, p. 139."
-      }
-    ]
-  }
-}
+Rules:
+1. Segmentation: New item if pattern "SURNAME, Name." appears.
+2. Fields: 'edition' as "X ed"; 'year' as 4-digit int; 'page' as string; 'author' only the first one.
+3. If data is missing, use null.
+4. No conversational filler. No Markdown blocks.
 """
 
-USER_PROMPT_DOCTRINE = """# USER MESSAGE — Extração de Doutrina
+USER_PROMPT_DOCTRINE = """
+Extract the citations from the text below and return ONLY the JSON in the required format.
 
-Extraia as referências doutrinárias do texto abaixo e retorne **apenas JSON válido**, conforme definido no SYSTEM PROMPT.
-
+TEXT:
 {doctrine_text}
-
-## Saída obrigatória
-Retornar **somente JSON válido**, exatamente na estrutura acima.  
-Não incluir markdown, comentários ou texto adicional.
 """
 
 
@@ -238,8 +174,8 @@ def get_collection() -> Collection:
 
 
 def require_api_key() -> None:
-    if not MISTRAL_API_KEY:
-        raise RuntimeError("MISTRAL_API_KEY não definido no ambiente.")
+    if not GROQ_API_KEY:
+        raise RuntimeError("GROQ_API_KEY não definida.")
 
 
 def kb_size(s: str) -> float:
@@ -248,48 +184,62 @@ def kb_size(s: str) -> float:
     return len(s.encode("utf-8")) / 1024.0
 
 
-def mistral_chat(system_prompt: str, user_prompt: str) -> str:
-    url = f"{MISTRAL_API_BASE.rstrip('/')}/chat/completions"
-    headers = {
-        "Authorization": f"Bearer {MISTRAL_API_KEY}",
-        "Content-Type": "application/json",
-    }
-    payload = {
-        "model": MISTRAL_MODEL,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        "temperature": 0,
-    }
-
+def groq_chat(system_prompt: str, user_prompt: str) -> str:
+    client = Groq(api_key=GROQ_API_KEY)
+    
     last_err: Optional[Exception] = None
     for attempt in range(1, RETRIES + 1):
         try:
-            resp = requests.post(url, headers=headers, json=payload, timeout=REQUEST_TIMEOUT)
-            if resp.status_code >= 400:
-                raise RuntimeError(f"HTTP {resp.status_code}: {resp.text}")
-            data = resp.json()
-            content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+            response = client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=0,
+                timeout=REQUEST_TIMEOUT,
+            )
+            
+            content = response.choices[0].message.content
             if not content:
                 raise RuntimeError("Resposta vazia do modelo.")
-            return content
+            return content.strip()
+            
         except Exception as e:
             last_err = e
             if attempt < RETRIES:
                 time.sleep(1.5 * attempt)
             else:
                 break
-    raise RuntimeError(f"Falha ao chamar Mistral API: {last_err}")
+    raise RuntimeError(f"Falha ao chamar Groq API: {last_err}")
 
 
 def _extract_json(text: str) -> Dict[str, Any]:
     try:
+        # Attempt to parse the JSON directly
         return json.loads(text)
-    except Exception:
-        pass
-    fenced = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.IGNORECASE | re.MULTILINE)
-    return json.loads(fenced)
+    except json.JSONDecodeError as e:
+        # Log the error and the raw response for debugging
+        log(f"Erro ao analisar JSON: {e}. Resposta recebida: {text}")
+    
+    # Attempt to clean up and parse fenced JSON blocks
+    try:
+        fenced = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.IGNORECASE | re.MULTILINE)
+        return json.loads(fenced)
+    except json.JSONDecodeError as e:
+        # Log the error and the raw fenced response for debugging
+        log(f"Erro ao analisar JSON (fenced): {e}. Resposta recebida: {fenced}")
+    
+    # Attempt to parse partial JSON by truncating to the last complete closing brace
+    try:
+        last_brace = fenced.rfind('}')
+        if last_brace != -1:
+            partial = fenced[:last_brace + 1]
+            return json.loads(partial)
+    except json.JSONDecodeError as e:
+        log(f"Erro ao analisar JSON parcial: {e}. Resposta parcial: {partial}")
+    
+    raise RuntimeError(f"Resposta inválida do modelo: {text}") from e
 
 
 def _to_int_year(v: Any) -> Optional[int]:
@@ -349,10 +299,10 @@ def normalize_legislation_refs(data: Dict[str, Any]) -> List[Dict[str, Any]]:
     return out
 
 
-def list_docs(col: Collection, status: str) -> List[Dict[str, Any]]:
+def list_docs(col: Collection) -> List[Dict[str, Any]]:
     return list(
         col.find(
-            {"status.pipelineStatus": status},
+            {"status.pipelineStatus": "enriched"},
             projection={
                 "_id": 1,
                 "caseStfId": 1,
@@ -373,15 +323,9 @@ def choose_mode() -> bool:
     return opt == "2"
 
 
-def process_doctrine(col: Collection, doc: Dict[str, Any], confirm_each: bool) -> None:
+def process_doctrine(col: Collection, doc: Dict[str, Any]) -> int:
     doc_id = doc.get("_id")
-    case_stf_id = doc.get("caseStfId")
     doctrine = (doc.get("rawData") or {}).get("rawDoctrine") or ""
-
-    if confirm_each:
-        ans = input(f"Processar este documento? (s/n) _id={doc_id}: ").strip().lower()
-        if ans != "s":
-            return
 
     if not doctrine.strip():
         log(f"IGNORADO: {doc_id} (rawDoctrine vazio)")
@@ -391,12 +335,20 @@ def process_doctrine(col: Collection, doc: Dict[str, Any], confirm_each: bool) -
                 "processing.caseDoctrineRefsAt": utc_now(),
                 "processing.caseDoctrineRefsStatus": "empty",
                 "processing.caseDoctrineRefsError": "rawDoctrine vazio",
+                "processing.pipelineStatus": "doctrineExtracted",
+                "status.pipelineStatus": "doctrineExtracted",
             }},
         )
-        return
+        return 0
 
     user_prompt = USER_PROMPT_DOCTRINE.format(doctrine_text=doctrine)
-    raw = mistral_chat(SYSTEM_PROMPT_DOCTRINE, user_prompt)
+    raw = groq_chat(SYSTEM_PROMPT_DOCTRINE, user_prompt)
+
+    # Exibir resposta integral da API
+    print("----- GROQ RESPONSE START -----")
+    print(raw)
+    print("----- GROQ RESPONSE END -----")
+
     parsed = _extract_json(raw)
     refs = normalize_doctrine_refs(parsed)
 
@@ -408,9 +360,11 @@ def process_doctrine(col: Collection, doc: Dict[str, Any], confirm_each: bool) -
                 "processing.caseDoctrineRefsAt": utc_now(),
                 "processing.caseDoctrineRefsStatus": "empty",
                 "processing.caseDoctrineRefsError": None,
+                "processing.pipelineStatus": "doctrineExtracted",
+                "status.pipelineStatus": "doctrineExtracted",
             }},
         )
-        return
+        return 0
 
     col.update_one(
         {"_id": doc_id},
@@ -424,18 +378,12 @@ def process_doctrine(col: Collection, doc: Dict[str, Any], confirm_each: bool) -
         }},
     )
 
-    log(f"OK: {doc_id} caseStfId={case_stf_id} refs={len(refs)}")
+    return len(refs)
 
 
-def process_legislation(col: Collection, doc: Dict[str, Any], confirm_each: bool) -> None:
+def process_legislation(col: Collection, doc: Dict[str, Any]) -> int:
     doc_id = doc.get("_id")
-    case_stf_id = doc.get("caseStfId")
     legislation = (doc.get("rawData") or {}).get("rawLegislation") or ""
-
-    if confirm_each:
-        ans = input(f"Processar este documento? (s/n) _id={doc_id}: ").strip().lower()
-        if ans != "s":
-            return
 
     if not legislation.strip():
         log(f"IGNORADO: {doc_id} (rawLegislation vazio)")
@@ -445,17 +393,19 @@ def process_legislation(col: Collection, doc: Dict[str, Any], confirm_each: bool
                 "processing.caseLegislationRefsAt": utc_now(),
                 "processing.caseLegislationRefsStatus": "empty",
                 "processing.caseLegislationRefsError": "rawLegislation vazio",
+                "processing.pipelineStatus": "legislationExtracted",
+                "status.pipelineStatus": "legislationExtracted",
             }},
         )
-        return
+        return 0
 
     user_prompt = USER_PROMPT_LEGISLATION.format(legislation_text=legislation)
-    raw = mistral_chat(SYSTEM_PROMPT_LEGISLATION, user_prompt)
+    raw = groq_chat(SYSTEM_PROMPT_LEGISLATION, user_prompt)
 
     # Exibir resposta integral da API
-    print("----- MISTRAL RESPONSE START -----")
+    print("----- GROQ RESPONSE START -----")
     print(raw)
-    print("----- MISTRAL RESPONSE END -----")
+    print("----- GROQ RESPONSE END -----")
 
     parsed = _extract_json(raw)
     refs = normalize_legislation_refs(parsed)
@@ -468,9 +418,11 @@ def process_legislation(col: Collection, doc: Dict[str, Any], confirm_each: bool
                 "processing.caseLegislationRefsAt": utc_now(),
                 "processing.caseLegislationRefsStatus": "empty",
                 "processing.caseLegislationRefsError": None,
+                "processing.pipelineStatus": "legislationExtracted",
+                "status.pipelineStatus": "legislationExtracted",
             }},
         )
-        return
+        return 0
 
     col.update_one(
         {"_id": doc_id},
@@ -484,8 +436,11 @@ def process_legislation(col: Collection, doc: Dict[str, Any], confirm_each: bool
         }},
     )
 
-    log(f"OK: {doc_id} caseStfId={case_stf_id} legRefs={len(refs)}")
+    return len(refs)
 
+
+# Variable to define the delay duration in seconds
+API_REQUEST_DELAY = 5  # Adjust the delay as needed
 
 def main() -> int:
     try:
@@ -495,9 +450,8 @@ def main() -> int:
         return 1
 
     col = get_collection()
+    docs = list_docs(col)
 
-    # Etapa Doutrina
-    docs = list_docs(col, "enriched")
     print("-------------------------------------")
     print(f"Documentos com status enriched: {len(docs)}")
     print("-------------------------------------")
@@ -505,7 +459,11 @@ def main() -> int:
         doc_id = d.get("_id")
         case_stf_id = d.get("caseStfId")
         doctrine = (d.get("rawData") or {}).get("rawDoctrine") or ""
-        print(f"_id: {doc_id} | caseStfId: {case_stf_id} | rawDoctrine: {kb_size(doctrine):.2f} KB")
+        legislation = (d.get("rawData") or {}).get("rawLegislation") or ""
+        print(
+            f"_id: {doc_id} | caseStfId: {case_stf_id} | "
+            f"rawDoctrine: {kb_size(doctrine):.2f} KB | rawLegislation: {kb_size(legislation):.2f} KB"
+        )
 
     if not docs:
         return 0
@@ -513,58 +471,70 @@ def main() -> int:
     confirm_each = choose_mode()
 
     total = 0
+    api_request_count = 0  # Counter for API requests
+
     for doc in docs:
+        doc_id = doc.get("_id")
+        case_stf_id = doc.get("caseStfId")
+        log(f"Iniciando extração de doutrinas e legislações do processo {case_stf_id}...")
+
+        if confirm_each:
+            ans = input(f"Processar este documento? (s/n) _id={doc_id}: ").strip().lower()
+            if ans != "s":
+                continue
+
         try:
-            process_doctrine(col, doc, confirm_each)
-            total += 1
+            doc_refs = process_doctrine(col, doc)
+            api_request_count += 1
         except Exception as e:
-            doc_id = doc.get("_id")
             col.update_one(
                 {"_id": doc_id},
                 {"$set": {
                     "processing.caseDoctrineRefsAt": utc_now(),
                     "processing.caseDoctrineRefsStatus": "error",
                     "processing.caseDoctrineRefsError": str(e),
+                    "processing.pipelineStatus": "error",
+                    "status.pipelineStatus": "error",
                 }},
             )
-            log(f"ERRO: {doc_id} - {e}")
+            log(f"ERRO (doutrina): {doc_id} - {e}")
+            doc_refs = 0
 
-    log(f"Processamento doutrina finalizado. Total processados: {total}")
-
-    # Etapa Legislacao
-    docs_leg = list_docs(col, "doctrineExtracted")
-    print("\n-------------------------------------")
-    print(f"Documentos com status doctrineExtracted: {len(docs_leg)}")
-    print("-------------------------------------")
-    for d in docs_leg:
-        doc_id = d.get("_id")
-        case_stf_id = d.get("caseStfId")
-        legislation = (d.get("rawData") or {}).get("rawLegislation") or ""
-        print(f"_id: {doc_id} | caseStfId: {case_stf_id} | rawLegislation: {kb_size(legislation):.2f} KB")
-
-    if not docs_leg:
-        return 0
-
-    confirm_each = choose_mode()
-
-    total_leg = 0
-    for doc in docs_leg:
         try:
-            process_legislation(col, doc, confirm_each)
-            total_leg += 1
+            leg_refs = process_legislation(col, doc)
+            api_request_count += 1
         except Exception as e:
-            doc_id = doc.get("_id")
             col.update_one(
                 {"_id": doc_id},
                 {"$set": {
                     "processing.caseLegislationRefsAt": utc_now(),
                     "processing.caseLegislationRefsStatus": "error",
                     "processing.caseLegislationRefsError": str(e),
+                    "processing.pipelineStatus": "error",
+                    "status.pipelineStatus": "error",
                 }},
             )
-            log(f"ERRO: {doc_id} - {e}")
+            log(f"ERRO (legislação): {doc_id} - {e}")
+            leg_refs = 0
 
-    log(f"Processamento legislação finalizado. Total processados: {total_leg}")
+        print(f"   Total de doutrinas extraídas: {doc_refs}.")
+        print(f"   Total de legislações extraídas: {leg_refs}.")
+        print(f"   Processamento do item {case_stf_id} finalizado com sucesso.\n")
+
+        total += 1
+
+        # Introduce delay after every 2 API requests
+        if not confirm_each and api_request_count >= 2:
+            log(f"Aguardando {API_REQUEST_DELAY} segundos antes de continuar...")
+            time.sleep(API_REQUEST_DELAY)
+            api_request_count = 0  # Reset the counter
+
+        if confirm_each:
+            cont = input("Processar próximo item? (s/n): ").strip().lower()
+            if cont != "s":
+                break
+
+    log(f"Processamento finalizado. Total processados: {total}")
     return 0
 
 

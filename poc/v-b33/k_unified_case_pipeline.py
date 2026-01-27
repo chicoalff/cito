@@ -54,7 +54,7 @@ CASE_DATA_COLLECTION = "case_data"
 # Defaults / Search params
 # =========================
 _HARD_DEFAULT_QUERY_STRING: str = "homoafetiva"
-_HARD_DEFAULT_PAGE_SIZE: int = 30
+_HARD_DEFAULT_PAGE_SIZE: int = 100
 _HARD_DEFAULT_INTEIRO_TEOR_BOOL: bool = True
 _HARD_DEFAULT_HEADED_MODE: bool = False
 _HARD_DEFAULT_URL_SCHEME: str = "https"
@@ -600,6 +600,49 @@ def build_raw_and_case_data(sections: Dict[str, str]) -> Tuple[Dict[str, Any], D
     return raw_data, case_data
 
 
+def extract_sections_from_markdown(md_text: str) -> Dict[str, Any]:
+    sections: Dict[str, List[str]] = {}
+    current_title: Optional[str] = None
+
+    for raw_line in (md_text or "").splitlines():
+        line = raw_line.rstrip()
+        m = re.match(r"^####\s+(.*)$", line)
+        if m:
+            current_title = _clean_ws(m.group(1))
+            if current_title not in sections:
+                sections[current_title] = []
+            continue
+        if current_title is not None:
+            sections[current_title].append(line)
+
+    extracted_data: Dict[str, Any] = {}
+    for title, lines in sections.items():
+        content = "\n".join([ln for ln in lines]).strip()
+        if not content:
+            continue
+
+        if title == "Publicação":
+            extracted_data["caseContent.casePublication"] = content
+        elif title == "Partes":
+            extracted_data["caseContent.caseParties"] = content
+        elif title == "Ementa":
+            extracted_data["caseContent.caseSummary"] = content
+        elif title == "Decisão":
+            extracted_data["caseContent.caseDecision"] = content
+        elif title == "Indexação":
+            extracted_data["caseContent.caseKeywords"] = content
+        elif title == "Legislação":
+            extracted_data["caseContent.caseLegislation"] = content
+        elif title == "Observação":
+            extracted_data["caseContent.caseNotes"] = content
+        elif title == "Doutrina":
+            extracted_data["caseContent.caseDoctrine"] = content
+        else:
+            extracted_data[f"caseContent.{title}"] = content
+
+    return extracted_data
+
+
 # =========================
 # Main
 # =========================
@@ -762,6 +805,9 @@ def main() -> int:
 
             case_data_col.update_one({"_id": doc["_id"]}, {"$set": update_fields})
 
+            # Process Markdown sections
+            process_case_markdown(case_data_col, doc)
+
             print("PROCESSAMENTO ITEM FINALIZADO")
 
         except Exception as e:
@@ -784,6 +830,23 @@ def main() -> int:
 
     log("Processamento finalizado")
     return 0
+
+
+def process_case_markdown(case_data_col: Collection, doc: Dict[str, Any]) -> None:
+    case_id = doc.get("_id")
+    markdown_content = (doc.get("caseContent") or {}).get("caseMarkdown")
+
+    if not markdown_content:
+        log(f"IGNORADO: {case_id} (caseMarkdown vazio)")
+        return
+
+    extracted_sections = extract_sections_from_markdown(markdown_content)
+
+    update_fields = {"processing.lastUpdatedAt": utc_now()}
+    update_fields.update(extracted_sections)
+
+    case_data_col.update_one({"_id": case_id}, {"$set": update_fields})
+    log(f"Processo {case_id} atualizado com seções extraídas do Markdown.")
 
 
 if __name__ == "__main__":

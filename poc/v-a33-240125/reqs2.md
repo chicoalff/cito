@@ -392,21 +392,15 @@ PROCESSAMENTO ITEM FINALIZADO
 
 
 
-# MINERAR DADOS caseContent
-
-Obtenha o conteúdo do campo 'caseContent.contentMd' identifique no conteúdo os seguintes títulos (identificados com ####) e extraia todo o conteúdo existente.
+# MINER
+Para cada processo, Obtenha o conteúdo do campo 'caseContent.caseMarkdown' identifique no conteúdo os seguintes títulos (identificados com ####) e extraia todo o conteúdo existente.
 
 
 - Publicação
 - Partes
-    - Extrair individualmente cada linha.
-    - Identificar o tipo da parte REQTE.(S), ADV.(A/S), PROC.(A/S)(ES) etc. É a informação existente antes do ':'.
-    - Identificar o nome da parte. Dado após o ':'. 
 - Ementa
 - Decisão
 - Indexação
-    - Identificar cada palavra-chave existente nessa seção, elas são separadas por vírgula.
-    - Cada palavra deve ser salva como um novo item dentro do item 'indexação'
 - Legislação
 - Observação
 - Doutrina
@@ -415,17 +409,18 @@ Utilize a seguinte regra de estrutura e nomenclatura de dados:
 
 Título/seção - Nome do campo na no documento na collection "case_data"
 
-Publicação	caseData.casePublication - 
-Partes	    caseData.caseParties -deve ser inserido um item chamado 'partieName', com o respectivo atributo do tipo da parte.
-Ementa	    caseData.caseSummary - 
-Decisão	    caseData.caseDecision    - 
-Indexação	caseData.caseKeywords    - ada palavra-chave identificada deverá ser um item individual.
-Legislação	caseData.caseLegislation - 
-Observação	caseData.caseNotes   - 
-Doutrina	caseData.caseDoctrine    - 
+Publicação	caseContent.casePublication - 
+Partes	    caseContent.caseParties
+Ementa	    caseContent.caseSummary - 
+Decisão	    caseContent.caseDecision    - 
+Indexação	caseContent.caseKeywords    - 
+Legislação	caseContent.caseLegislation - 
+Observação	caseContent.caseNotes   - 
+Doutrina	caseContent.caseDoctrine    - 
 
 
 Caso exista algum título não identificado acima, o mesmo deve ser inserido com seu próprio nome.
+AR DADOS caseContent
 
 
 # MINERAR COM IA - DOUTRINA
