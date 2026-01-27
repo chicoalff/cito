@@ -7,7 +7,7 @@ Processa por processo:
 - Extrai doutrinas (rawData.rawDoctrine) -> caseData.caseDoctrineReferences
 - Extrai legislações (rawData.rawLegislation) -> caseData.caseLegislationReferences
 
-Filtro inicial: status.pipelineStatus == "htmlFetched"
+Filtro inicial: status.pipelineStatus == "enriched"
 
 Dependências:
   pip install pymongo requests
@@ -352,7 +352,7 @@ def normalize_legislation_refs(data: Dict[str, Any]) -> List[Dict[str, Any]]:
 def list_docs(col: Collection) -> List[Dict[str, Any]]:
     return list(
         col.find(
-            {"status.pipelineStatus": "htmlFetched"},
+            {"status.pipelineStatus": "enriched"},
             projection={
                 "_id": 1,
                 "caseStfId": 1,
@@ -494,7 +494,7 @@ def main() -> int:
     docs = list_docs(col)
 
     print("-------------------------------------")
-    print(f"Documentos com status htmlFetched: {len(docs)}")
+    print(f"Documentos com status enriched: {len(docs)}")
     print("-------------------------------------")
     for d in docs:
         doc_id = d.get("_id")
