@@ -35,7 +35,7 @@ from pymongo.collection import Collection
 try:
     from a_load_configs import load_configs
 except Exception:
-    load_configs = None
+    load_configs = None  # type: ignore
 
 
 # =========================
