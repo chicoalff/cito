@@ -1,0 +1,250 @@
+{
+  "01_identificacao_processo": {
+    "identificacao_processo": {
+      "numero_completo": "ADI 7200 / RR",
+      "classe_processual": "Ação Direta de Inconstitucionalidade (ADI)",
+      "assunto_principal": "Inconstitucionalidade de lei estadual (Lei nº 1.701/2022) que proíbe destruição de bens particulares apreendidos em operações ambientais, por usurpação de competência da União e violação ao direito fundamental ao meio ambiente equilibrado."
+    },
+    "partes_principais": {
+      "autor_requerente": "REDE SUSTENTABILIDADE",
+      "reus_principais": [
+        "GOVERNADOR DO ESTADO DE RORAIMA",
+        "ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA"
+      ]
+    },
+    "relator": "Min. ROBERTO BARROSO",
+    "orgao_julgador": "Tribunal Pleno do Supremo Tribunal Federal (STF)"
+  },
+  "02_partes_detalhadas": {
+    "partes_detalhadas": {
+      "autores_requerentes": [
+        {
+          "nome_completo": "Rede Sustentabilidade",
+          "qualificacao": "Partido Político",
+          "papel_processual": "Requerente (Autor da ADI)"
+        }
+      ],
+      "requeridos_resistentes": [
+        {
+          "nome_completo": "Governador do Estado de Roraima",
+          "cargo_funcao": "Chefe do Poder Executivo Estadual",
+          "representacao": "Procurador-Geral do Estado de Roraima"
+        },
+        {
+          "nome_completo": "Assembleia Legislativa do Estado de Roraima",
+          "cargo_funcao": "Poder Legislativo Estadual",
+          "representacao": "Procurador-Geral da Assembleia Legislativa do Estado de Roraima"
+        }
+      ],
+      "intervenientes_amicus_curiae": [
+        {
+          "nome_entidade": "Conselho Indígena de Roraima",
+          "sigla": "CIR",
+          "tipo_intervencao": "Amicus Curiae",
+          "posicionamento": "Em defesa dos direitos indígenas e ambientais"
+        },
+        {
+          "nome_entidade": "Partido Verde Nacional",
+          "sigla": "PV",
+          "tipo_intervencao": "Amicus Curiae",
+          "posicionamento": "Em defesa do meio ambiente"
+        },
+        {
+          "nome_entidade": "Articulação dos Povos Indígenas do Brasil",
+          "sigla": "APIB",
+          "tipo_intervencao": "Amicus Curiae",
+          "posicionamento": "Em defesa dos direitos indígenas e ambientais"
+        }
+      ],
+      "advogados_procuradores": [
+        {
+          "nome": "Cássio dos Santos Araujo",
+          "parte_representada": "Rede Sustentabilidade",
+          "qualificacao": "Advogado(a)"
+        },
+        {
+          "nome": "Outro(a) Advogado(a) não nomeado(a) (referenciado como 'e outro(a/s)')",
+          "parte_representada": "Rede Sustentabilidade",
+          "qualificacao": "Advogado(a)"
+        },
+        {
+          "nome": "Procurador-Geral do Estado de Roraima",
+          "parte_representada": "Governador do Estado de Roraima",
+          "qualificacao": "Procurador(a) do Estado"
+        },
+        {
+          "nome": "Procurador-Geral da Assembleia Legislativa do Estado de Roraima",
+          "parte_representada": "Assembleia Legislativa do Estado de Roraima",
+          "qualificacao": "Procurador(a) Legislativo"
+        },
+        {
+          "nome": "Luiz Eduardo Silva de Castilho",
+          "parte_representada": "Conselho Indígena de Roraima (CIR)",
+          "qualificacao": "Advogado(a)"
+        },
+        {
+          "nome": "Lauro Rodrigues de Moraes Rego Junior",
+          "parte_representada": "Partido Verde Nacional (PV)",
+          "qualificacao": "Advogado(a)"
+        },
+        {
+          "nome": "Caio Henrique Camacho Coelho",
+          "parte_representada": "Partido Verde Nacional (PV)",
+          "qualificacao": "Advogado(a)"
+        },
+        {
+          "nome": "Maurício Serpa França",
+          "parte_representada": "Articulação dos Povos Indígenas do Brasil (APIB)",
+          "qualificacao": "Advogado(a)"
+        },
+        {
+          "nome": "Nathaly Conceição Munarini Otero",
+          "parte_representada": "Articulação dos Povos Indígenas do Brasil (APIB)",
+          "qualificacao": "Advogado(a)"
+        }
+      ],
+      "entidades_organizacoes": [
+        {
+          "nome": "Rede Sustentabilidade",
+          "tipo": "partido"
+        },
+        {
+          "nome": "Governador do Estado de Roraima (Poder Executivo Estadual)",
+          "tipo": "órgão"
+        },
+        {
+          "nome": "Assembleia Legislativa do Estado de Roraima",
+          "tipo": "órgão"
+        },
+        {
+          "nome": "Conselho Indígena de Roraima",
+          "tipo": "associação"
+        },
+        {
+          "nome": "Partido Verde Nacional",
+          "tipo": "partido"
+        },
+        {
+          "nome": "Articulação dos Povos Indígenas do Brasil",
+          "tipo": "associação"
+        },
+        {
+          "nome": "Procuradoria-Geral do Estado de Roraima",
+          "tipo": "órgão"
+        },
+        {
+          "nome": "Procuradoria-Geral da Assembleia Legislativa do Estado de Roraima",
+          "tipo": "órgão"
+        }
+      ]
+    },
+    "contagem_total": {
+      "total_autores": 1,
+      "total_requeridos": 2,
+      "total_intervenientes": 3,
+      "total_advogados": 9,
+      "total_entidades": 8
+    }
+  },
+  "03_datas_cronologia": {
+    "cronologia_processo": {
+      "data_distribuicao": null,
+      "data_relatoramento": null,
+      "data_julgamento": "22/02/2023",
+      "data_publicacao": "17/03/2023",
+      "outras_datas_importantes": [
+        {
+          "evento": "Sessão Virtual de julgamento (início)",
+          "data": "10/02/2023"
+        },
+        {
+          "evento": "Sessão Virtual de julgamento (fim)",
+          "data": "17/02/2023"
+        },
+        {
+          "evento": "Divulgação do Diário de Justiça Eletrônico (DJe)",
+          "data": "16/03/2023"
+        },
+        {
+          "evento": "Publicação da Lei nº 1.701/2022 (Estado de Roraima)",
+          "data": "05/07/2022"
+        }
+      ]
+    },
+    "prazos_vencimentos": []
+  },
+  "04_decisao_resultado": {
+    "resposta_bruta": "{\n    \"decisao_final\": {\n        \"resultado\": \"O Supremo Tribunal Federal (STF) julgou **procedente** a Ação Direta de Inconstitucionalidade (ADI) 7200, declarando a inconstitucionalidade da **Lei nº 1.701/2022 do Estado de Roraima**, que vedava a destruição e inutilização de bens particulares apreendidos em operações ambientais. A decisão foi unânime, confirmando a medida cautelar anteriormente deferida.\",\n        \"tese_principal\": \"É inconstitucional lei estadual que proíbe os órgãos policiais e ambientais de destruir e inutilizar bens particulares apreendidos em operações, por **violação da competência privativa da União** para legislar sobre:\n        1. **Direito penal e processual penal** (art. 22, I, da CF/1988);\n        2. **Normas gerais de proteção ao meio ambiente** (art. 24, VI e § 1º, da CF/1988);\n        Além de **afrontar o direito fundamental ao meio ambiente ecologicamente equilibrado** (art. 225, *caput*, da CF/1988), ao inviabilizar a repressão efetiva a ilícitos ambientais e expor populações indígenas a danos irreparáveis.\",\n        \"unanimidade_ou_maioria\": \"Unanimidade (11 votos a favor, sem divergências).\",\n        \"acordao\": \"Decisão publicada no **DJe-s/n**, divulgado em 16/03/2023 e publicado em 17/03/2023. Processo julgado em **sessão virtual** entre 10/02/2023 e 17/02/2023, com relatoria do Ministro **Roberto Barroso**.\"\n    },\n    \"votacao_ministros\": [\n        {\n            \"ministro\": \"Roberto Barroso (Relator)\",\n            \"voto\": \"Votou pela procedência do pedido, fundamentando que:\n            - A lei estadual **usurpou competência legislativa da União** (direito penal, processual penal e normas gerais ambientais).\n            - A proibição de destruição de instrumentos usados em crimes ambientais **facilita a reincidência** e prejudica a fiscalização, violando o art. 225 da CF/1988.\n            - Há risco de **danos irreparáveis ao meio ambiente e aos povos indígenas** em Roraima, justificando a medida cautelar.\",\n            \"decisao\": \"Favorável à inconstitucionalidade\",\n            \"fundamentacao_principal\": \"Incompetência legislativa estadual e violação ao direito ambiental (arts. 22, I; 24, VI; e 225 da CF/1988).\"\n        },\n        {\n            \"ministro\": \"Demais Ministros do STF (unânimes)\",\n            \"voto\": \"Aderiram integralmente aos fundamentos do Relator, sem apresentar divergências ou votos vencidos.\",\n            \"decisao\": \"Favorável à inconstitucionalidade\",\n            \"fundamentacao_principal\": \"Concordância com a tese de violação à competência da União e ao direito ambiental.\"\n        }\n    ],\n    \"medidas_decretadas\": [\n        {\n            \"tipo_medida\": \"Declaração de inconstitucionalidade *erga omnes*\",\n            \"descricao\": \"Invalidação **com efeitos *ex tunc*** (retroativos) da Lei nº 1.701/2022 de Roraima, impedindo sua aplicação desde a origem.\",\n            \"alcance\": \"Vinculante para todos os órgãos públicos e particulares no território nacional, especialmente:\n            - Órgãos ambientais e policiais de Roraima (ex.: IBAMA, Polícia Militar Ambiental).\n            - Poder Judiciário e Legislativo estadual.\"\n        },\n        {\n            \"tipo_medida\": \"Confirmação de medida cautelar\",\n            \"descricao\": \"Manutenção da suspensão liminar dos efeitos da lei estadual, já deferida anteriormente pelo STF.\",\n            \"alcance\": \"Garantia de que a fiscalização ambiental possa destruir instrumentos de crimes (ex.: motosserras, equipamentos de garimpo ilegal) sem obstáculos legais.\"\n        },\n        {\n            \"tipo_medida\": \"Tese de julgamento vinculante\",\n            \"descricao\": \"Estabelecimento de precedente para casos similares: **qualquer lei estadual que proíba a destruição de bens apreendidos em operações ambientais será inconstitucional** pelos mesmos fundamentos.\",\n            \"alcance\": \"Orientações para Estados e Municípios na edição de normas ambientais, reforçando a competência exclusiva da União em matérias penais e gerais de meio ambiente.\"\n        }\n    ]\n}"
+  },
+  "05_fundamentos_juridicos": {
+    "fundamentacao_completa": {
+      "inconstitucionalidades_apontadas": [
+        {
+          "tipo": "formal",
+          "descricao_detalhada": "Usurpação de competência legislativa privativa da União para legislar sobre **direito penal e processual penal** (art. 22, I, da CF/1988) e para editar **normas gerais de proteção ao meio ambiente** (art. 24, VI e § 1º, da CF/1988). A lei estadual (Lei nº 1.701/2022) invade esfera reservada à União, que detém competência exclusiva para disciplinar matérias penais e normas gerais ambientais, cabendo aos estados apenas suplementação (art. 24, §§ 1º a 3º, da CF/1988).",
+          "artigos_cf_afetados": [
+            "Art. 22, I",
+            "Art. 24, VI",
+            "Art. 24, § 1º"
+          ]
+        },
+        {
+          "tipo": "material",
+          "descricao_detalhada": "Violação ao **direito fundamental ao meio ambiente ecologicamente equilibrado** (art. 225, *caput*, da CF/1988). A proibição de destruição de instrumentos usados em infrações ambientais (ex.: motosserras, armas, equipamentos de garimpo ilegal) facilita a reincidência de crimes ambientais, comprometendo a eficácia do **poder de polícia ambiental** e a proteção de ecossistemas e populações indígenas em Roraima. A norma estadual, ao impedir a inutilização de bens apreendidos, cria obstáculo à repressão de ilícitos com danos irreversíveis ao meio ambiente.",
+          "artigos_cf_afetados": [
+            "Art. 225, *caput*"
+          ]
+        }
+      ],
+      "principais_argumentos": [
+        "A lei estadual (Lei nº 1.701/2022) **proíbe a destruição ou inutilização de bens particulares apreendidos** em operações ambientais (ex.: equipamentos usados em desmatamento, garimpo ou caça ilegal), o que **inviabiliza a atuação efetiva dos órgãos de fiscalização**. A medida contraria a lógica de prevenção e repressão de crimes ambientais, uma vez que os instrumentos apreendidos poderiam ser reutilizados para novas infrações, agravando danos ao meio ambiente e a comunidades indígenas.",
+        "A **competência para legislar sobre direito penal e processual penal é privativa da União** (Art. 22, I, CF/1988), assim como a edição de **normas gerais de proteção ambiental** (Art. 24, VI, CF/1988). A lei de Roraima extrapola o limite suplementar dos estados (Art. 24, § 2º), usurpando atribuição federal e criando conflito com a legislação nacional (ex.: Lei de Crimes Ambientais, Lei nº 9.605/1998).",
+        "A **destruição de bens apreendidos** em operações ambientais é medida **proporcional e necessária** para garantir a eficácia da fiscalização, conforme previsto em normas federais (ex.: Art. 25 da Lei nº 9.605/1998, que autoriza a destruição de produtos e instrumentos de crimes ambientais). A proibição estadual **desrespeita o devido processo legal** (Art. 5º, LIV, CF/1988), pois impede a aplicação de sanções administrativas e penais previstas em lei federal, sem oferecer alternativa eficaz para coibir ilícitos.",
+        "O **direito ao meio ambiente ecologicamente equilibrado** (Art. 225, CF/1988) impõe ao Estado o dever de **proteger e reprimir atividades lesivas**, especialmente em regiões críticas como a Amazônia. A lei questionada **facilita a impunidade** e coloca em risco biomas e povos indígenas, contrariando princípios constitucionais de **prevenção** (Art. 225, § 1º, I) e **responsabilização** (Art. 225, § 3º).",
+        "A decisão do STF destacou que a **manutenção da lei estadual** poderia causar **danos irreparáveis**, justificando a concessão de medida cautelar e a declaração de inconstitucionalidade com efeitos *ex tunc* (retroativos)."
+      ],
+      "base_legal_citada": [
+        {
+          "dispositivo_legal": "Art. 22, I, da CF/1988",
+          "conteudo_relevante": "Competência **privativa da União** para legislar sobre direito penal e processual penal. A lei estadual invade essa competência ao disciplinar a destruição de bens apreendidos, matéria vinculada à execução de sanções penais e administrativas."
+        },
+        {
+          "dispositivo_legal": "Art. 24, VI e § 1º, da CF/1988",
+          "conteudo_relevante": "Competência **concorrente** da União, estados e DF para legislar sobre meio ambiente, **cabendo à União editar normas gerais** e aos estados suplementá-las. A lei de Roraima extrapola o limite suplementar ao proibir a destruição de bens, conflitando com normas federais (ex.: Lei nº 9.605/1998)."
+        },
+        {
+          "dispositivo_legal": "Art. 225, *caput*, da CF/1988",
+          "conteudo_relevante": "Direito fundamental ao **meio ambiente ecologicamente equilibrado**, imposto ao Poder Público e à coletividade. A proibição de inutilizar instrumentos de crimes ambientais **compromete a proteção ambiental**, especialmente em áreas sensíveis como Roraima, onde há alta incidência de garimpo ilegal e desmatamento."
+        },
+        {
+          "dispositivo_legal": "Art. 5º, LIV, da CF/1988",
+          "conteudo_relevante": "Princípio do **devido processo legal**, que inclui a observância de procedimentos legais para aplicação de sanções. A lei estadual **desrespeita esse princípio** ao impedir a destruição de bens sem oferecer mecanismo alternativo para coibir ilícitos, conforme previsto em lei federal."
+        },
+        {
+          "dispositivo_legal": "Lei nº 9.605/1998 (Lei de Crimes Ambientais), Art. 25",
+          "conteudo_relevante": "Autoriza a **destruição de produtos e instrumentos** utilizados em crimes ambientais, como medida de prevenção à reincidência. A lei de Roraima conflita diretamente com essa norma federal."
+        }
+      ],
+      "precedentes_jurisprudenciais": [
+        {
+          "processo_precedente": "ADI 7200/RR",
+          "tribunal": "STF (Tribunal Pleno)",
+          "aplicacao_no_caso": "Decisão paradigmática que declarou a inconstitucionalidade da Lei nº 1.701/2022/RR, fixando a tese de que **leis estaduais não podem proibir a destruição de bens apreendidos em operações ambientais**, por violação à competência federal e ao direito ao meio ambiente (Art. 225, CF/1988). O julgamento reforçou a **primazia das normas federais** em matéria penal e ambiental."
+        },
+        {
+          "processo_precedente": "Fundamentação complementar do Min. Nunes Marques (ADI 7200/RR)",
+          "tribunal": "STF",
+          "aplicacao_no_caso": "Destacou que a **destruição de bens apreendidos** deve observar o **devido processo legal, ampla defesa e contraditório**, mas não pode ser vedada por lei estadual, sob pena de **usurpação de competência penal federal** (Art. 22, I, CF/1988)."
+        }
+      ]
+    },
+    "efeitos_da_decisao": {
+      "eficacia": "**Erga omnes** e **vinculante** (Art. 102, § 2º, CF/1988), aplicável a todos os órgãos públicos e particulares no território nacional, especialmente no Estado de Roraima.",
+      "alcance": "**Declaração de inconstitucionalidade com efeitos retroativos (*ex tunc*)**, invalidando a Lei nº 1.701/2022 desde sua origem (5.7.2022). A decisão **restaura a aplicação das normas federais** sobre destruição de bens apreendidos em crimes ambientais (ex.: Lei nº 9.605/1998).",
+      "modulacao_efeitos": "Não houve modulação de efeitos. O STF **confirmou a medida cautelar** anteriormente deferida e declarou a inconstitucionalidade com eficácia imediata, sem limitar seus efeitos no tempo, em razão da **urgência na proteção ambiental** e dos riscos de danos irreparáveis."
+    }
+  },
+  "06_ementa_indexacao": {
+    "resposta_bruta": "{\n    \"ementa_completa\": \"\n    DIREITO CONSTITUCIONAL. AÇÃO DIRETA DE INCONSTITUCIONALIDADE. LEI ESTADUAL QUE VEDA A DESTRUIÇÃO E INUTILIZAÇÃO DE BENS PARTICULARES APREENDIDOS EM OPERAÇÕES AMBIENTAIS.\n    1. Ação direta contra a Lei nº 1.701/2022, do Estado de Roraima, que proíbe os órgãos ambientais de fiscalização e a Polícia Militar de destruir e inutilizar bens particulares apreendidos nas operações e fiscalizações ambientais.\n    2. Ao proibir a destruição de instrumentos utilizados na prática de infrações ambientais, a lei questionada incorre em inconstitucionalidade formal. Usurpação de competência da União para legislar sobre direito penal e processual penal, bem como para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988).\n    3. De igual modo, a norma questionada vulnera o direito fundamental ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988). Isso porque a proibição de destruir instrumentos utilizados em infrações ambientais acaba permitindo a prática de novos ilícitos, inviabilizando a plenitude do exercício do poder de polícia ambiental.\n    4. A manutenção dos efeitos da norma estadual pode acarretar prejuízo para a devida repressão à prática de ilícitos ambientais, com potenciais danos irreparáveis ao meio ambiente e às populações indígenas no Estado de Roraima.\n    5. Pedido julgado procedente para declarar a inconstitucionalidade da Lei nº 1.701, de 5.7.2022, do Estado de Roraima, com a seguinte tese de julgamento: 'É inconstitucional lei estadual que proíbe os órgãos policiais e ambientais de destruir e inutilizar bens particulares apreendidos em operações, por violação da competência privativa da União para legislar sobre direito penal e processual penal, para editar normas gerais de proteção ao meio ambiente (art. 22, I, e 24, VI e § 1º, da CF/1988) e por ofensa ao direito fundamental ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988).'\",\n\n    \"indexacao_tematicas\": {\n        \"temas_principais\": [\n            \"Ação Direta de Inconstitucionalidade (ADI)\",\n            \"Competência Legislativa (União vs. Estados)\",\n            \"Direito Ambiental\",\n            \"Direito Penal e Processual Penal\",\n            \"Poder de Polícia Ambiental\",\n            \"Proteção ao Meio Ambiente\",\n            \"Populações Indígenas e Meio Ambiente\",\n            \"Inconstitucionalidade Formal e Material\"\n        ],\n        \"palavras_chave\": [\n            \"Lei nº 1.701/2022 (Roraima)\",\n            \"destruição de bens apreendidos\",\n            \"infrações ambientais\",\n            \"competência privativa da União\",\n            \"normas gerais de proteção ambiental\",\n            \"direito fundamental ao meio ambiente (art. 225, CF/88)\",\n            \"poder de polícia ambiental\",\n            \"danos irreparáveis ao meio ambiente\",\n            \"populações indígenas em Roraima\",\n            \"inconstitucionalidade formal e material\",\n            \"tese de julgamento (STF)\"\n        ],\n        \"repercussao_geral\": \"Não aplicável (trata-se de ADI, não de Recurso Extraordinário com repercussão geral)\",\n        \"tese_repercussao\": \"Não aplicável\"\n    },\n\n    \"informacoes_complementares\": {\n        \"valor_causa\": \"Não consta\",\n        \"segredo_justica\": \"não\",\n        \"urgência\": \"sim (risco de danos irreparáveis ao meio ambiente e populações indígenas, conforme item 4 da ementa)\"\n    }\n}"
+  }
+}

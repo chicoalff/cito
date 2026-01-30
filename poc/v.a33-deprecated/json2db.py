@@ -1,10 +1,33 @@
 import sqlite3
 import json
 from pathlib import Path
-from datetime import datetime 
+from datetime import datetime
+from dataclasses import dataclass, field, asdict
+from typing import Optional, List
 
-DATA_DIR = Path("poc/v01-a33/data")
+@dataclass
+class DecisaoSTF:
+    """
+    Modelo de dados para uma decisão do STF, garantindo a estrutura e os tipos corretos.
+    """
+    id_decisao_stf: str
+    decisao: str
+    url: str
+    orgao_colegiado: str
+    relator: str
+    julgamento: str
+    publicacao: str
+    id_unico: Optional[int] = None
+    status: str = 'novo'
+    created_at: str = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    updated_at: str = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
+    @classmethod
+    def from_json_dict(cls, data: dict):
+        """Cria uma instância de DecisaoSTF a partir de um dicionário JSON."""
+        return cls(id_unico=data.get("id"), id_decisao_stf=data.get("id_stf"), decisao=data.get("decisao"), url=data.get("url_decisao"), orgao_colegiado=data.get("orgao_colegiado"), relator=data.get("relator"), julgamento=data.get("dt_julgamento"), publicacao=data.get("dt_publicacao"), status=data.get("status", "novo"), created_at=data.get("criado"), updated_at=data.get("atualizado"))
+
+# --- Configurações ---
 DB_FILE = "cito.db"
 TABLE_NAME = "stf_index"
 JSON_FILE_PATH = Path("poc/v01-a33/data/json/jurisprudencia.json")
@@ -14,7 +37,7 @@ def create_database():
     Cria o banco de dados SQLite e a tabela stf_index, se não existirem.
     A tabela é criada com uma restrição UNIQUE em 'id_decisao_stf' para evitar duplicatas.
     """
-    print(f"1/3 | Configuração | Iniciado | Criando banco de dados '{DB_FILE}' e tabela '{TABLE_NAME}'...")
+    print(f"1. [DB Setup] Verificando banco de dados '{DB_FILE}' e tabela '{TABLE_NAME}'...")
     conn = None
     try:
         conn = sqlite3.connect(DB_FILE)

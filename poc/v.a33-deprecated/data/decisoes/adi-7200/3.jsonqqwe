@@ -1,0 +1,144 @@
+{
+  "analise_principal_erro": "{\n    \"processo\": {\n        \"numero\": \"ADI 7200 / RR\",\n        \"tipo\": \"Ação Direta de Inconstitucionalidade (ADI)\",\n        \"classe_processual\": \"Controle Concentrado de Constitucionalidade\"\n    },\n    \"partes_envolvidas\": {\n        \"autor\": {\n            \"nome\": \"REDE SUSTENTABILIDADE\",\n            \"tipo\": \"partido político\"\n        },\n        \"requerente\": {\n            \"nome\": \"REDE SUSTENTABILIDADE\",\n            \"tipo\": \"partido político\",\n            \"advogados\": [\n                {\n                    \"nome\": \"CASSIO DOS SANTOS ARAUJO\"\n                },\n                {\n                    \"nome\": \"OUTRO(A/S) ADVOGADO(A/S) NÃO ESPECIFICADO\"\n                }\n            ]\n        },\n        \"requeridos\": [\n            {\n                \"nome\": \"GOVERNADOR DO ESTADO DE RORAIMA\",\n                \"cargo_ou_funcao\": \"Chefe do Executivo Estadual\",\n                \"representacao\": {\n                    \"nome\": \"PROCURADOR-GERAL DO ESTADO DE RORAIMA\",\n                    \"funcao\": \"Representante Legal do Estado\"\n                }\n            },\n            {\n                \"nome\": \"ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA\",\n                \"cargo_ou_funcao\": \"Poder Legislativo Estadual\",\n                \"representacao\": {\n                    \"nome\": \"PROCURADOR-GERAL DA ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA\",\n                    \"funcao\": \"Representante Legal da Assembleia\"\n                }\n            }\n        ],\n        \"intervenientes_amicus_curiae\": [\n            {\n                \"nome\": \"CONSELHO INDÍGENA DE RORAIMA - CIR\",\n                \"tipo\": \"organização indígena\",\n                \"advogados\": [\n                    {\n                        \"nome\": \"LUIZ EDUARDO SILVA DE CASTILHO\"\n                    }\n                ]\n            },\n            {\n                \"nome\": \"PARTIDO VERDE NACIONAL - PV\",\n                \"tipo\": \"partido político\",\n                \"advogados\": [\n                    {\n                        \"nome\": \"LAURO RODRIGUES DE MORAES REGO JUNIOR\"\n                    },\n                    {\n                        \"nome\": \"CAIO HENRIQUE CAMACHO COELHO\"\n                    }\n                ]\n            },\n            {\n                \"nome\": \"ARTICULAÇÃO DOS POVOS INDÍGENAS DO BRASIL - APIB\",\n                \"tipo\": \"organização indígena nacional\",\n                \"advogados\": [\n                    {\n                        \"nome\": \"MAURICIO SERPA FRANCA\"\n                    },\n                    {\n                        \"nome\": \"NATHALY CONCEICAO MUNARINI OTERO\"\n                    }\n                ]\n            }\n        ],\n        \"impulsionadores\": []\n    },\n    \"relatoria\": {\n        \"relator\": \"Ministro ROBERTO BARROSO\",\n        \"presidente\": \"Não especificado no documento\",\n        \"orgao_julgador\": \"Tribunal Pleno do Supremo Tribunal Federal (STF)\"\n    },\n    \"datas_importantes\": {\n        \"data_julgamento\": \"22/02/2023\",\n        \"data_publicacao\": \"17/03/2023\",\n        \"data_registro\": {\n            \"divulgacao_dje\": \"16/03/2023\",\n            \"publicacao_dje\": \"17/03/2023\",\n            \"analise_documento\": \"26/07/2023\"\n        },\n        \"periodo_sessao_virtual\": {\n            \"inicio\": \"10/02/2023\",\n            \"fim\": \"17/02/2023\"\n        }\n    },\n    \"decisao\": {\n        \"resultado\": \"O Tribunal, por unanimidade, confirmou a medida cautelar deferida e julgou procedente o pedido, a fim de declarar a inconstitucionalidade da Lei nº 1.701, de 5.7.2022, do Estado de Roraima.\",\n        \"tese_principal\": \"É inconstitucional lei estadual que proíbe os órgãos policiais e ambientais de destruir e inutilizar bens particulares apreendidos em operações, por violação da competência privativa da União para legislar sobre direito penal e processual penal, para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988) e por afronta ao direito ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988).\",\n        \"decisao_monocratica\": \"Não constam decisões monocráticas no corpo principal do documento, apenas referência a ADPF 709 em observação.\",\n        \"acordao\": {\n            \"conteudo\": \"Processo Eletrônico DJe-s/n DIVULG 16-03-2023 PUBLIC 17-03-2023\",\n            \"numero_paginas\": 22,\n            \"analise\": \"MAV (26/07/2023)\"\n        },\n        \"votos\": [\n            {\n                \"ministro\": \"ROBERTO BARROSO\",\n                \"voto\": \"Voto favorável à inconstitucionalidade da Lei nº 1.701/2022, fundamentado na usurpação de competência legislativa da União e na violação ao direito fundamental ao meio ambiente ecologicamente equilibrado.\",\n                \"posicionamento\": \"favorável\"\n            },\n            {\n                \"ministro\": \"NUNES MARQUES\",\n                \"voto\": \"Fundamentação complementar: inconstitucionalidade da legislação estadual por usurpação da competência privativa da União em direito penal e processual penal, ressaltando a necessidade de observância do devido processo legal, ampla defesa e contraditório na destruição de bens apreendidos.\",\n                \"posicionamento\": \"favorável\"\n            }\n        ]\n    },\n    \"fundamentos_juridicos\": {\n        \"inconstitucionalidades_apontadas\": [\n            {\n                \"tipo\": \"formal\",\n                \"descricao\": \"Usurpação de competência legislativa da União para legislar sobre direito penal e processual penal (art. 22, I, da CF/1988).\",\n                \"artigos_cf\": [\n                    \"Art. 22, I\",\n                    \"Art. 24, VI e § 1º\"\n                ]\n            },\n            {\n                \"tipo\": \"formal\",\n                \"descricao\": \"Violação da competência concorrente da União para editar normas gerais de proteção ao meio ambiente (art. 24, VI e § 1º, da CF/1988).\",\n                \"artigos_cf\": [\n                    \"Art. 24, VI e § 1º\"\n                ]\n            },\n            {\n                \"tipo\": \"material\",\n                \"descricao\": \"Afronta ao direito fundamental ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988), ao permitir a continuidade de ilícitos ambientais pela proibição de destruição de instrumentos utilizados em infrações.\",\n                \"artigos_cf\": [\n                    \"Art. 225, caput\"\n                ]\n            }\n        ],\n        \"principais_argumentos\": [\n            \"A Lei nº 1.701/2022 do Estado de Roraima proíbe a destruição e inutilização de bens particulares apreendidos em operações ambientais, o que inviabiliza a plenitude do exercício do poder de polícia ambiental e facilita a reincidência de ilícitos.\",\n            \"A competência para legislar sobre direito penal e processual penal é privativa da União (art. 22, I, CF/1988), assim como a edição de normas gerais sobre meio ambiente (art. 24, VI e § 1º, CF/1988), não podendo o Estado-membro legislar de forma contrária ou suplementar sem observância das normas federais.\",\n            \"A manutenção dos efeitos da norma estadual pode causar danos irreparáveis ao meio ambiente e às populações indígenas em Roraima, especialmente em um contexto de alta vulnerabilidade ambiental.\",\n            \"A destruição de instrumentos utilizados em crimes ambientais está prevista em normas federais (ex.: Lei nº 9.605/1998 - Lei de Crimes Ambientais) e é medida essencial para a efetividade da repressão a ilícitos.\"\n        ],\n        \"base_legal_citada\": [\n            {\n                \"dispositivo\": \"Art. 22, I, da CF/1988\",\n                \"descricao\": \"Competência privativa da União para legislar sobre direito penal.\"\n            },\n            {\n                \"dispositivo\": \"Art. 24, VI e § 1º, da CF/1988\",\n                \"descricao\": \"Competência concorrente da União para legislar sobre proteção ao meio ambiente, cabendo aos Estados suplementar a legislação federal.\"\n            },\n            {\n                \"dispositivo\": \"Art. 225, caput, da CF/1988\",\n                \"descricao\": \"Direito fundamental ao meio ambiente ecologicamente equilibrado, imposto ao Poder Público e à coletividade.\"\n            },\n            {\n                \"dispositivo\": \"Art. 17, § 1º, da Lei Complementar nº 140/2011\",\n                \"descricao\": \"Normas sobre cooperação entre entes federativos em fiscalização ambiental.\"\n            },\n            {\n                \"dispositivo\": \"Art. 6º da Lei nº 6.938/1981\",\n                \"descricao\": \"Dispõe sobre a Política Nacional do Meio Ambiente e instrumentos de fiscalização.\"\n            },\n            {\n                \"dispositivo\": \"Art. 25, §§ 1º a 6º, da Lei nº 9.605/1998\",\n                \"descricao\": \"Lei de Crimes Ambientais, que prevê a apreensão e destruição de instrumentos utilizados em infrações.\"\n            },\n            {\n                \"dispositivo\": \"Art. 72, IV, V, VIII, § 6º, da Lei nº 9.605/1998\",\n                \"descricao\": \"Procedimentos para apreensão e destruição de produtos e instrumentos de crimes ambientais.\"\n            },\n            {\n                \"dispositivo\": \"Decreto nº 6.514/2008 (Art. 3º, IV, V, VIII; Art. 101, I a VI; Art. 111, I, II; Art. 112, §§ 1º a 3º; Art. 134, IV, V)\",\n                \"descricao\": \"Regulamenta a Lei nº 9.605/1998 e estabelece procedimentos para fiscalização e sanções administrativas ambientais.\"\n            }\n        ],\n        \"precedentes_citados\": [\n            {\n                \"processo\": \"ADPF 190 (TP)\",\n                \"tema\": \"Julgamento com caráter definitivo e observância da celeridade processual.\"\n            },\n            {\n                \"processo\": \"ADI 5253 (TP)\",\n                \"tema\": \"Competência legislativa em matéria ambiental.\"\n            },\n            {\n                \"processo\": \"ADI 5566 (TP)\",\n                \"tema\": \"Competência legislativa em matéria ambiental.\"\n            },\n            {\n                \"processo\": \"RE 586224 (TP)\",\n                \"tema\": \"Competência legislativa dos Municípios em meio ambiente.\"\n            },\n            {\n                \"processo\": \"ADPF 709 (decisão monocrática)\",\n                \"tema\": \"Proteção de grupos indígenas.\"\n            }\n        ]\n    },\n    \"ementa\": \"DIREITO CONSTITUCIONAL. AÇÃO DIRETA DE INCONSTITUCIONALIDADE. LEI ESTADUAL QUE VEDA A DESTRUIÇÃO E INUTILIZAÇÃO DE BENS PARTICULARES APREENDIDOS EM OPERAÇÕES AMBIENTAIS. 1. Ação direta contra a Lei nº 1.701/2022, do Estado de Roraima, que proíbe os órgãos ambientais de fiscalização e a Polícia Militar de destruir e inutilizar bens particulares apreendidos nas operações e fiscalizações ambientais. 2. Ao proibir a destruição de instrumentos utilizados na prática de infrações ambientais, a lei questionada incorre em inconstitucionalidade formal. Usurpação de competência da União para legislar sobre direito penal e processual penal, bem como para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988). 3. De igual modo, a norma questionada vulnera o direito fundamental ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988). Isso porque a proibição de destruir instrumentos utilizados em infrações ambientais acaba permitindo a prática de novos ilícitos, inviabilizando a plenitude do exercício poder de polícia ambiental. 4. A manutenção dos efeitos da norma estadual pode acarretar prejuízo para a devida repressão à prática de ilícitos ambientais, com potenciais danos irreparáveis ao meio ambiente e às populações indígenas no Estado de Roraima. 5. Pedido julgado procedente para declarar a inconstitucionalidade da Lei nº 1.701, de 5.7.2022, do Estado de Roraima, com a seguinte tese de julgamento: \\\"É inconstitucional lei estadual que proíbe os órgãos policiais e ambientais de destruir e inutilizar bens particulares apreendidos em operações, por violação da competência privativa da União para legislar sobre direito penal e processual penal, para editar normas gerais de proteção ao meio ambiente (arts. 22, I, e 24, VI e § 1º, da CF/1988) e por afronta ao direito ao meio ambiente ecologicamente equilibrado (art. 225, caput, da CF/1988)\\\".\",\n        \"indexacao\": {\n            \"temas_principais\": [\n                \"COMPETÊNCIA LEGISLATIVA\",\n                \"UNIÃO FEDERAL vs. ESTADO-MEMBRO\",\n                \"MEIO AMBIENTE\",\n                \"DIREITO PENAL AMBIENTAL\",\n                \"DIREITO PROCESSUAL PENAL\",\n                \"NORMAS GERAIS vs. LEGISLAÇÃO SUPLEMENTAR\",\n                \"DIREITO FUNDAMENTAL AO MEIO AMBIENTE ECOLOGICAMENTE EQUILIBRADO\",\n                \"POVO INDÍGENA\",\n                \"PODER DE POLÍCIA AMBIENTAL\",\n                \"DESTRUIÇÃO DE BENS APREENDIDOS\",\n                \"INFRAÇÕES AMBIENTAIS\",\n                \"USURPAÇÃO DE COMPETÊNCIA\",\n                \"INCONSTITUCIONALIDADE FORMAL E MATERIAL\"\n            ],\n            \"palavras_chave\": [\n                \"Ação Direta de Inconstitucionalidade (ADI)\",\n                \"Lei Estadual nº 1.701/2022\",\n                \"Roraima (RR)\",\n                \"Competência Privativa da União\",\n                \"Direito Penal Ambiental\",\n                \"Direito Processual Penal\",\n                \"Normas Gerais de Meio Ambiente\",\n                \"Art. 22, I, CF/1988\",\n                \"Art. 24, VI e § 1º, CF/1988\",\n                \"Art. 225, caput, CF/1988\",\n                \"Poder de Polícia Ambiental\",\n                \"Destruição de Bens Apreendidos\",\n                \"Infrações Ambientais\",\n                \"Populações Indígenas\",\n                \"Danos Irreparáveis ao Meio Ambiente\",\n                \"Tese de Julgamento\",\n                \"Unanimidade no Julgamento\",\n                \"Medida Cautelar Confirmada\",\n                \"Sessão Virtual do Plenário\",\n                \"Ministro Roberto Barroso (Relator)\",\n                \"Fundamentação Complementar (Min. Nunes Marques)\",\n                \"Devido Processo Legal\",\n                \"Ampla Defesa e Contraditório\",\n                \"Lei de Crimes Ambientais (Lei nº 9.605/1998)\",\n                \"Decreto nº 6.514/2008\",\n                \"Política Nacional do Meio Ambiente (Lei nº 6.938/1981)\",\n                \"Lei Complementar nº 140/2011\",\n                \"Precedentes do STF (ADPF 190, ADI 5253, ADI 5566, RE 5862",
+  "partes_detalhadas": {
+    "partes_completas": {
+      "autores_requerentes": [
+        {
+          "nome": "REDE SUSTENTABILIDADE",
+          "qualificacao": "Partido Político",
+          "papel": "Requerente (Autor da ADI)"
+        }
+      ],
+      "requeridos_resistentes": [
+        {
+          "nome": "GOVERNADOR DO ESTADO DE RORAIMA",
+          "qualificacao": "Chefe do Poder Executivo Estadual",
+          "papel": "Requerido (Interessado)"
+        },
+        {
+          "nome": "ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA",
+          "qualificacao": "Poder Legislativo Estadual",
+          "papel": "Requerida (Interessada)"
+        }
+      ],
+      "intervenientes_atores": [
+        {
+          "nome": "CONSELHO INDÍGENA DE RORAIMA - CIR",
+          "tipo_intervencao": "Amicus Curiae",
+          "posicionamento": "Favorável à ADI (implícito no contexto)"
+        },
+        {
+          "nome": "PARTIDO VERDE NACIONAL - PV",
+          "tipo_intervencao": "Amicus Curiae",
+          "posicionamento": "Favorável à ADI (implícito no contexto)"
+        },
+        {
+          "nome": "ARTICULAÇÃO DOS POVOS INDÍGENAS DO BRASIL - APIB",
+          "tipo_intervencao": "Amicus Curiae",
+          "posicionamento": "Favorável à ADI (implícito no contexto)"
+        }
+      ],
+      "advogados_procuradores": [
+        {
+          "nome": "CASSIO DOS SANTOS ARAUJO",
+          "parte_representada": "REDE SUSTENTABILIDADE",
+          "qualificacao": "Advogado"
+        },
+        {
+          "nome": "OUTRO(A/S) [não identificado no texto]",
+          "parte_representada": "REDE SUSTENTABILIDADE",
+          "qualificacao": "Advogado(a)"
+        },
+        {
+          "nome": "PROCURADOR-GERAL DO ESTADO DE RORAIMA",
+          "parte_representada": "GOVERNADOR DO ESTADO DE RORAIMA",
+          "qualificacao": "Procurador"
+        },
+        {
+          "nome": "PROCURADOR-GERAL DA ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA",
+          "parte_representada": "ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA",
+          "qualificacao": "Procurador"
+        },
+        {
+          "nome": "LUIZ EDUARDO SILVA DE CASTILHO",
+          "parte_representada": "CONSELHO INDÍGENA DE RORAIMA - CIR",
+          "qualificacao": "Advogado"
+        },
+        {
+          "nome": "LAURO RODRIGUES DE MORAES REGO JUNIOR",
+          "parte_representada": "PARTIDO VERDE NACIONAL - PV",
+          "qualificacao": "Advogado"
+        },
+        {
+          "nome": "CAIO HENRIQUE CAMACHO COELHO",
+          "parte_representada": "PARTIDO VERDE NACIONAL - PV",
+          "qualificacao": "Advogado"
+        },
+        {
+          "nome": "MAURICIO SERPA FRANCA",
+          "parte_representada": "ARTICULAÇÃO DOS POVOS INDÍGENAS DO BRASIL - APIB",
+          "qualificacao": "Advogado"
+        },
+        {
+          "nome": "NATHALY CONCEICAO MUNARINI OTERO",
+          "parte_representada": "ARTICULAÇÃO DOS POVOS INDÍGENAS DO BRASIL - APIB",
+          "qualificacao": "Advogada"
+        }
+      ],
+      "entidades_organizacoes": [
+        {
+          "nome": "REDE SUSTENTABILIDADE",
+          "sigla": "REDE",
+          "tipo": "Partido Político"
+        },
+        {
+          "nome": "GOVERNO DO ESTADO DE RORAIMA",
+          "sigla": null,
+          "tipo": "Poder Executivo Estadual"
+        },
+        {
+          "nome": "ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA",
+          "sigla": "ALE-RR",
+          "tipo": "Poder Legislativo Estadual"
+        },
+        {
+          "nome": "CONSELHO INDÍGENA DE RORAIMA",
+          "sigla": "CIR",
+          "tipo": "Associação/Organização Indígena"
+        },
+        {
+          "nome": "PARTIDO VERDE NACIONAL",
+          "sigla": "PV",
+          "tipo": "Partido Político"
+        },
+        {
+          "nome": "ARTICULAÇÃO DOS POVOS INDÍGENAS DO BRASIL",
+          "sigla": "APIB",
+          "tipo": "Articulação/Organização Indígena Nacional"
+        },
+        {
+          "nome": "PROCURADORIA-GERAL DO ESTADO DE RORAIMA",
+          "sigla": "PGE-RR",
+          "tipo": "Órgão Público"
+        },
+        {
+          "nome": "PROCURADORIA DA ASSEMBLEIA LEGISLATIVA DO ESTADO DE RORAIMA",
+          "sigla": null,
+          "tipo": "Órgão Público"
+        }
+      ]
+    },
+    "total_partes_autores": 1,
+    "total_partes_requeridos": 2,
+    "total_intervenientes": 3
+  },
+  "_metadados": {
+    "arquivo_origem": "adi-7200-14-10-2025-11-53-03.html",
+    "data_processamento": "2025-01-14",
+    "modelo_ia": "mistral-large-latest",
+    "tipo_analise": "completa_detalhada",
+    "status_analise_principal": "erro",
+    "status_analise_partes": "sucesso",
+    "tamanho_texto_analisado": 6268
+  }
+}
